@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+class String
+  def pluralize
+    MiniSupport::Inflector.pluralize(self)
+  end
+
+  def underscore
+    MiniSupport::Inflector.underscore(self)
+  end
+
+  def camelize
+    MiniSupport::nflector.camelize(self)
+  end
+
+  def constantize
+    MiniSupport::Inflector.constantize(self)
+  end
+end
