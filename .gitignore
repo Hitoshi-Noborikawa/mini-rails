@@ -6,7 +6,6 @@ tmp/
 .ruby-version
 .bundle
 vendor
-Gemfile.lock
 coverage
 
 /doc
