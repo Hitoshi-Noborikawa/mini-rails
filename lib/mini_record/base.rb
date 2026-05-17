@@ -14,6 +14,54 @@ module MiniRecord
       @persisted
     end
 
+    def save
+      persisted? ? update_record : insert_record
+    end
+
+    def update(attrs)
+      attrs.each { |k, v| send("#{k}=", v) }
+      save
+    end
+
+    def destroy
+      return false unless persisted?
+
+      self.class.connection.execute(
+        "DELETE FROM #{self.class.table_name} WHERE id = ?",
+        id
+      )
+      @persisted = false
+      true
+    end
+
+    private
+
+    def insert_record
+      cols = self.class.columns - ['id'] # 例: ['title', 'body', 'created_at', 'updated_at']
+      values = cols.map { send(_1) } # 例: ['Hello', 'World', nil, nil]
+      placeholders = (['?'] * cols.size).join(', ') # '?, ?, ?, ?'
+      # 生成される SQL の例: INSERT INTO posts (title, body, created_at, updated_at) VALUES (?, ?, ?, ?)
+      # バインド引数: 'Hello', 'World', nil, nil
+      self.class.connection.execute(
+        "INSERT INTO #{self.class.table_name} (#{cols.join(', ')}) VALUES (#{placeholders})",
+        *values
+      )
+      self.id = self.class.connection.last_insert_row_id
+      @persisted = true
+      true
+    end
+
+    def update_record
+      cols = self.class.columns - ['id']
+      values = cols.map { send(_1) }
+      set_clause = cols.map { "#{_1} = ?" }.join(', ')
+      self.class.connection.execute(
+        "UPDATE #{self.class.table_name} SET #{set_clause} WHERE id = ?",
+        *values, id
+      )
+      true
+    end
+
     class << self
       def establish_connection(database_path)
         @@connection = Connection.new(database_path)
@@ -75,6 +123,10 @@ module MiniRecord
 
       def where(conditions)
         Relation.new(self, conditions)
+      end
+
+      def create(attrs)
+        new(attrs).tap(&:save)
       end
     end
   end
