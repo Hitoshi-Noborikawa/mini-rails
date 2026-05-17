@@ -58,6 +58,24 @@ module MiniRecord
         instance.instance_variable_set(:@persisted, true)
         instance
       end
+
+      def find(id)
+        rows = connection.execute(
+          "SELECT * FROM #{table_name} WHERE id = ? LIMIT 1",
+          id
+        )
+        raise "#{name} not found: id=#{id}" if rows.empty?
+
+        instantiate(rows.first)
+      end
+
+      def all
+        Relation.new(self)
+      end
+
+      def where(conditions)
+        Relation.new(self, conditions)
+      end
     end
   end
 end
