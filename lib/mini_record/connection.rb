@@ -9,7 +9,7 @@ module MiniRecord
     end
 
     def execute(sql, *binds)
-      @db.execute(sql, *binds)
+      @db.execute(sql, binds)
     end
 
     def last_insert_row_id
