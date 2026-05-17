@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Mini_Support
+module MiniSupport
   module Inflector
     module_function
 
@@ -27,7 +27,7 @@ module Mini_Support
     # constantize('String')                    → String （文字列からクラスを返す）
     # constantize('Hash')                      → Hash
     # constantize('ActiveSupport::Inflector')  → ActiveSupport::Inflector（moduleも）
-    def constantize()
+    def constantize(camel_cased_word)
       Object.const_get(camel_cased_word)
     end
   end

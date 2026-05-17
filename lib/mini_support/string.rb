@@ -10,7 +10,7 @@ class String
   end
 
   def camelize
-    MiniSupport::nflector.camelize(self)
+    MiniSupport::Inflector.camelize(self)
   end
 
   def constantize
