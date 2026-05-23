@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module MiniModel
-  class Validations
+  module Validations
     # ActiveModel::Validations が ActiveSupport::Concern を使ってやっていることを
     # mini-rails では self.included フックで再現
     def self.included(base)
