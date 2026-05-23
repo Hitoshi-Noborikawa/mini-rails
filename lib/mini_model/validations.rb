@@ -49,6 +49,8 @@ module MiniModel
       case validator_type
       when :presence
         validate_presence(attribute) if validator_arg
+      when :length
+        validate_length(attribute, validator_arg) if validator_arg
       else
         raise NotImplementedError, "Unknown validator: #{validator_type}"
       end
@@ -57,6 +59,15 @@ module MiniModel
     def validate_presence(attribute)
       value = public_send(attribute)
       errors.add(attribute, "can't be blank") if value.nil? || value.to_s.strip.empty?
+    end
+
+    def validate_length(attribute, options)
+      value = public_send(attribute)
+
+      # length: { maximum: N } を受け取る
+      if options[:maximum] && value.length > options[:maximum]
+        errors.add(attribute, "is too long (maximum is #{options[:maximum]} characters)")
+      end
     end
   end
 end
