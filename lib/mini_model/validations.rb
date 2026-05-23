@@ -25,7 +25,7 @@ module MiniModel
 
     def valid?
       errors.clear
-      run_validations
+      run_validates
       errors.empty?
     end
 
