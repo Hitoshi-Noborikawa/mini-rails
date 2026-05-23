@@ -10,6 +10,7 @@ module MiniModel
       @messages[attribute] << message
     end
 
+    # 例: post.errors[:title] => ["can't be blank"]
     def [](attribute)
       @messages[attribute]
     end
