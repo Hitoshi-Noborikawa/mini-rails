@@ -9,3 +9,6 @@ end
 require_relative 'mini_record/connection'
 require_relative 'mini_record/base'
 require_relative 'mini_record/relation'
+require_relative 'mini_record/migration'
+require_relative 'mini_record/schema_migration'
+require_relative 'mini_record/migrator'
