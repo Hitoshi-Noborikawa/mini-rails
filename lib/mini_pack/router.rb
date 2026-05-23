@@ -53,5 +53,37 @@ module MiniPack
       end
       [/\A#{regex_source}\z/, param_names]
     end
+
+    # env を受け取って [status, headers, body] を返す
+    def call(env)
+      request = Rack::Request.new(env)
+      http_method = request.request_method.downcase.to_sym
+      path = request.path_info
+
+      @routes.each do |route|
+        next unless route.method == http_method
+
+        match = route.regex.match(path)
+        next unless match
+
+        path_params = route.param_names.to_h { |name| [name.to_sym, match[name]] }
+        return dispatch(route, request, path_params)
+      end
+
+      not_found
+    end
+
+    private
+
+    # Route から controller クラスを取得して dispatch する
+    def dispatch(route, request, path_params)
+      controller_class = "#{route.controller}_controller".camelize.constantize
+      response = Rack::Response.new
+      controller_class.dispatch(route.action.to_sym, request, response, path_params)
+    end
+
+    def not_found
+      [404, { 'content-type' => 'text/plain' }, ['Not Found']]
+    end
   end
 end
