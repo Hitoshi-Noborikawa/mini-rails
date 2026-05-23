@@ -2,6 +2,8 @@
 
 module MiniRecord
   class Base
+    include MiniModel::Validations
+
     @@connection = nil
 
     def initialize(attrs = {})
@@ -15,6 +17,8 @@ module MiniRecord
     end
 
     def save
+      return false unless valid?
+
       persisted? ? update_record : insert_record
     end
 
