@@ -47,7 +47,12 @@ module MiniPack
         match = route.regex.match(path)
         next unless match
 
-        path_params = route.param_names.to_h { |name| [name.to_sym, match[name]] }
+        # Rack の PATH_INFO は ASCII-8BIT エンコーディングなので、正規表現で取り出した値も
+        # ASCII-8BIT になる。そのまま SQLite3 に bind すると BLOB 扱いされて integer の id と
+        # マッチしないので、UTF-8 にエンコーディングを差し替えてから渡す。
+        path_params = route.param_names.to_h do |name|
+          [name.to_sym, match[name].dup.force_encoding(Encoding::UTF_8)]
+        end
         return dispatch(route, request, path_params)
       end
 
