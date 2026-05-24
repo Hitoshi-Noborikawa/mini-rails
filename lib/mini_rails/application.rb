@@ -2,8 +2,12 @@
 
 module MiniRails
   class Application
+    def routes
+      @routes ||= MiniPack::Router.new
+    end
+
     def call(env)
-      [200, { "content-type" => "text/plain" }, ["Hello, mini-rails"]]
+      routes.call(env)
     end
   end
 end
