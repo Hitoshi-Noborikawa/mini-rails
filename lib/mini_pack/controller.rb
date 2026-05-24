@@ -29,8 +29,8 @@ module MiniPack
       [response.status, response.headers, response.body]
     end
 
-    # クエリパラメータ（?keyword=...）と form body と URL の path パラメータ（:id）を1つのハッシュにまとめる
-    # シンボル・文字列キー両方で引けるようにするため
+    # クエリ (?keyword=...) と form ボディと URL の path パラメータ (:id) を1つの Hash にまとめる。
+    # キーは Symbol で統一する（Rails の HashWithIndifferentAccess 相当はミニ版では未実装）。
     def params
       @params ||= begin
         base = @request.params.transform_keys(&:to_sym)
@@ -49,14 +49,14 @@ module MiniPack
         @response.write(html)
       elsif json
         @response.status = status
-        @response['content-type'] = 'text/json'
-        @response.write(json)
+        @response['content-type'] = 'application/json'
+        @response.write(JSON.generate(json))
       end
     end
 
     def redirect_to(path, status: 302)
       @response.status = status
-      @response.['location'] = path
+      @response['location'] = path
     end
   end
 end
