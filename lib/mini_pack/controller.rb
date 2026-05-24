@@ -23,6 +23,12 @@ module MiniPack
 
     def process(action)
       public_send(action)
+      # action が明示的に render を呼び出さなかった時のフォールバック
+      default_render(action) unless @_rendered
+    end
+
+    def default_render(action)
+      render(template: action)
     end
 
     def to_rack_response
@@ -61,6 +67,7 @@ module MiniPack
     end
 
     def redirect_to(path, status: 302)
+      @_rendered = true
       @response.status = status
       @response['location'] = path
     end
