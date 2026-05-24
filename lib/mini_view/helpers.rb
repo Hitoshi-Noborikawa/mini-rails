@@ -4,7 +4,7 @@ require 'erb'
 
 module MiniView
   module Helpers
-    def lint_to(text, path)
+    def link_to(text, path)
       %(<a href="#{path}">#{text}</a>)
     end
 
