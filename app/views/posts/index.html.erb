@@ -1,0 +1,12 @@
+<h1>Posts</h1>
+
+<% if @posts.empty? %>
+  <p>No posts yet.</p>
+<% else %>
+  <% @posts.each do |post| %>
+    <article>
+      <h2><%= link_to(post.title, "/posts/#{post.id}") %></h2>
+      <p><%= post.body %></p>
+    </article>
+  <% end %>
+<% end %>

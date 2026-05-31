@@ -2,11 +2,11 @@
 
 class PostsController < MiniPack::Controller
   def index
-    render plain: 'posts index'
+    @posts = Post.all.to_a
   end
 
   def show
-    render plain: "posts show id=#{params[:id]}"
+    @post = Post.find(params[:id])
   end
 
   def create

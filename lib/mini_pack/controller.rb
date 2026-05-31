@@ -23,6 +23,12 @@ module MiniPack
 
     def process(action)
       public_send(action)
+      # action が明示的に render を呼び出さなかった時のフォールバック
+      default_render(action) unless @_rendered
+    end
+
+    def default_render(action)
+      render(template: action)
     end
 
     def to_rack_response
@@ -38,7 +44,9 @@ module MiniPack
       end
     end
 
-    def render(plain: nil, html: nil, json: nil, status: 200)
+    def render(plain: nil, html: nil, json: nil, template: nil, status: 200)
+      @_rendered = true
+
       if plain
         @response.status = status
         @response['content-type'] = 'text/plain'
@@ -51,10 +59,15 @@ module MiniPack
         @response.status = status
         @response['content-type'] = 'application/json'
         @response.write(JSON.generate(json))
+      elsif template
+        @response.status = status
+        @response['content-type'] = 'text/html'
+        @response.write(MiniView::Renderer.new(self).render(template))
       end
     end
 
     def redirect_to(path, status: 302)
+      @_rendered = true
       @response.status = status
       @response['location'] = path
     end
