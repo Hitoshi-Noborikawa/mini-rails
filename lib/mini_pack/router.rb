@@ -38,7 +38,7 @@ module MiniPack
     # env を受け取って [status, headers, body] を返す
     def call(env)
       request = Rack::Request.new(env)
-      http_method = request.request_method.downcase.to_sym
+      http_method = http_method_for(request)
       path = request.path_info
 
       @routes.each do |route|
@@ -60,6 +60,17 @@ module MiniPack
     end
 
     private
+
+    # このリクエストを処理すべき HTTP メソッドを返す
+    # GET など POST 以外はそのままに、POST だけは _method が含まれていることを考慮する
+    # （Rack::MethodOverride）に合わせている
+    def http_method_for(request)
+      actual = request.request_method.downcase.to_sym
+      return actual unless actual == :post
+
+      override = request.params['_method']
+      override ? override.downcase.to_sym : :post
+    end
 
     # to: 'posts#index' を ['posts', 'index'] に分けて Route として積む
     def add_route(method, pattern, to)
