@@ -6,8 +6,6 @@ require_relative 'config/routes'
 
 MiniRecord::Base.establish_connection('db/development.sqlite3')
 
-# 本来は app/models/post.rb に置くが、後ほど対応
-class Post < MiniRecord::Base
-end
+require_relative 'app/models/post'
 
 run MiniRails::application
