@@ -1,0 +1,15 @@
+<h1>New Post</h1>
+
+<% if @post.errors.any? %>
+  <ul>
+    <% @post.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<form action="/posts" method="post">
+  <p><%= text_field(:title, @post.title) %></p>
+  <p><%= text_area(:body, @post.body) %></p>
+  <p><%= submit('Create') %></p>
+</form>

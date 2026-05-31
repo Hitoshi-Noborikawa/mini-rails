@@ -1,5 +1,7 @@
 <h1>Posts</h1>
 
+<p><%= link_to('New post', '/posts/new') %></p>
+
 <% if @posts.empty? %>
   <p>No posts yet.</p>
 <% else %>

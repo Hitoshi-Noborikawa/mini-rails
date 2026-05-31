@@ -7,5 +7,5 @@ MiniRails.application.routes.draw do
   get    '/posts/:id',      to: 'posts#show'
   get    '/posts/:id/edit', to: 'posts#edit'
   patch  '/posts/:id',      to: 'posts#update'
-  delete '/posts:id',       to: 'posts#destroy'
+  delete '/posts/:id',       to: 'posts#destroy'
 end
