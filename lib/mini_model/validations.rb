@@ -2,13 +2,9 @@
 
 module MiniModel
   module Validations
-    # ActiveModel::Validations が ActiveSupport::Concern を使ってやっていることを
-    # mini-rails では self.included フックで再現
-    def self.included(base)
-      base.extend(ClassMethods)
-    end
+    extend MiniSupport::Concern
 
-    module ClassMethods
+    class_methods do
       # 例: validates :title, presence: true
       def validates(attribute, options)
         validations << [attribute, options]
@@ -63,6 +59,7 @@ module MiniModel
 
     def validate_length(attribute, options)
       value = public_send(attribute)
+      return if value.nil?
 
       # length: { maximum: N } を受け取る
       if options[:maximum] && value.length > options[:maximum]
