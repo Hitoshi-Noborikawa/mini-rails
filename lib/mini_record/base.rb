@@ -4,6 +4,8 @@ module MiniRecord
   class Base
     include MiniModel::Validations
 
+    define_callbacks :save, :create, :update
+
     @@connection = nil
 
     def initialize(attrs = {})
@@ -19,7 +21,13 @@ module MiniRecord
     def save
       return false unless valid?
 
-      persisted? ? update_record : insert_record
+      run_callbacks(:save) do
+        if persisted?
+          run_callbacks(:update) { update_record }
+        else
+          run_callbacks(:create) { insert_record }
+        end
+      end
     end
 
     def update(attrs)

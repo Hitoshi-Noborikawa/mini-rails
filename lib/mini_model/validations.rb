@@ -3,6 +3,13 @@
 module MiniModel
   module Validations
     extend MiniSupport::Concern
+    # @_dependencies に積まれる。
+    # MiniRecord::Base が include MiniModel::Validations した際に Callbacks が展開される
+    include MiniSupport::Callbacks
+
+    included do
+      define_callbacks :validation
+    end
 
     class_methods do
       # 例: validates :title, presence: true
@@ -13,6 +20,14 @@ module MiniModel
       def validations
         @validations ||= []
       end
+
+      def validate(method_name)
+        custom_validations << method_name
+      end
+
+      def custom_validations
+        @custom_validations ||= []
+      end
     end
 
     def errors
@@ -21,8 +36,9 @@ module MiniModel
 
     def valid?
       errors.clear
-      run_validates
-      errors.empty?
+      # before_validation が throw :abort すると run_callbacks が false を返す
+      result = run_callbacks(:validation) { run_validates; true }
+      result && errors.empty?
     end
 
     def invalid?
@@ -37,6 +53,8 @@ module MiniModel
           run_validator(validator_type, attribute, validator_arg)
         end
       end
+
+      self.class.custom_validations.each { public_send(_1) }
     end
 
     # validator_type = :presence, validator_arg = true
