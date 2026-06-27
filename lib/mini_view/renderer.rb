@@ -3,6 +3,7 @@
 module MiniView
   class Renderer
     include Helpers
+    include MiniPack::UrlHelpers
 
     def initialize(controller)
       @_controller = controller

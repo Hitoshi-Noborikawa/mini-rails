@@ -2,6 +2,8 @@
 
 module MiniPack
   class Controller
+    include MiniPack::UrlHelpers
+
     class << self
       # Router からリクエストごとに呼び出される。インスタンスを混ぜないため
       def dispatch(action, request, response, path_params)

@@ -17,7 +17,7 @@ class PostsController < MiniPack::Controller
     # strong parameters は別途対応
     @post = Post.new(title: params[:title], body: params[:body])
     if @post.save
-      redirect_to "/posts/#{@post.id}"
+      redirect_to post_path(@post.id)
     else
       render(template: :new)
     end

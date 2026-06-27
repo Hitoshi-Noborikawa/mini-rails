@@ -5,6 +5,10 @@ class String
     MiniSupport::Inflector.pluralize(self)
   end
 
+  def singularize
+    MiniSupport::Inflector.singularize(self)
+  end
+
   def underscore
     MiniSupport::Inflector.underscore(self)
   end

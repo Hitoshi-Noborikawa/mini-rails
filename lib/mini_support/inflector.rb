@@ -8,6 +8,10 @@ module MiniSupport
       word + 's'
     end
 
+    def singularize(word)
+      word.end_with?('s') ? word.chomp('s') : word
+    end
+
     # 'PostsController'     → 'posts_controller'
     # 'ActiveModel::Errors' → 'active_model/errors'
     # 'XMLHttpRequest'      → 'xml_http_request'
