@@ -15,8 +15,6 @@ module MiniPack
   Route = Struct.new(:method, :pattern, :regex, :param_names, :controller, :action)
 
   class Router
-    HTTP_METHODS = %i[get post patch put delete].freeze
-
     def initialize
       @routes = []
     end
@@ -26,13 +24,7 @@ module MiniPack
     #   get '/posts', to: 'posts#index'
     # end
     def draw(&block)
-      instance_eval(&block)
-    end
-
-    HTTP_METHODS.each do |http_method|
-      define_method(http_method) do |pattern, to:|
-        add_route(http_method, pattern, to)
-      end
+      Mapper.new(@routes).instance_eval(&block)
     end
 
     # env を受け取って [status, headers, body] を返す
@@ -70,23 +62,6 @@ module MiniPack
 
       override = request.params['_method']
       override ? override.downcase.to_sym : :post
-    end
-
-    # to: 'posts#index' を ['posts', 'index'] に分けて Route として積む
-    def add_route(method, pattern, to)
-      controller, action = to.split('#')
-      regex, param_names = compile_pattern(pattern)
-      @routes << Route.new(method, pattern, regex, param_names, controller, action)
-    end
-
-    # 例: '/posts/:id' → /\A\/posts\/(?<id>[^\/]+)\z/ と ['id']
-    def compile_pattern(pattern)
-      param_names = []
-      regex_source = pattern.gsub(/:(\w+)/) do
-        param_names << Regexp.last_match(1)
-        "(?<#{Regexp.last_match(1)}>[^/]+)"
-      end
-      [/\A#{regex_source}\z/, param_names]
     end
 
     # Route から controller クラスを取得して dispatch する
