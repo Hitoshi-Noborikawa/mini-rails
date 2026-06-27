@@ -55,7 +55,7 @@ module MiniPack
         @response.write(plain)
       elsif html
         @response.status = status
-        @response['content-type'] = 'text/html'
+        @response['content-type'] = 'text/html charset=utf-8'
         @response.write(html)
       elsif json
         @response.status = status
