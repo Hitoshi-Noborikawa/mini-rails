@@ -21,6 +21,10 @@ module MiniView
       render_layout { action_html }
     end
 
+    def flash
+      @_controller.flash
+    end
+
     private
 
     LAYOUT_PATH = 'app/views/layouts/application.html.erb'
