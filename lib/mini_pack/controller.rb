@@ -9,6 +9,14 @@ module MiniPack
       def dispatch(action, request, response, path_params)
         new.dispatch(action, request, response, path_params)
       end
+
+      def before_action(method_name, only: [], except: [])
+        before_action_filters << { method: method_name, only: Array(only), except: Array(except) }
+      end
+
+      def before_action_filters
+        @before_action_filters ||= []
+      end
     end
 
     attr_reader :request, :response
@@ -18,15 +26,39 @@ module MiniPack
       @response = response
       @path_params = path_params
       process(action)
+      flash.persist!
       to_rack_response
+    end
+
+    def flash
+      @flash ||= Flash.new(session)
     end
 
     private
 
     def process(action)
+      self.class.before_action_filters.each do |filter|
+        next unless filter_applies?(filter, action)
+        send(filter[:method])
+        return if @_rendered
+      end
+
       public_send(action)
       # action が明示的に render を呼び出さなかった時のフォールバック
       default_render(action) unless @_rendered
+    end
+
+    def filter_applies?(filter, action)
+      only = filter[:only]
+      except = filter[:except]
+
+      return false if only.any? && !only.include?(action)
+      return false if except.any? && except.include?(action)
+      true
+    end
+
+    def session
+      @request.session
     end
 
     def default_render(action)

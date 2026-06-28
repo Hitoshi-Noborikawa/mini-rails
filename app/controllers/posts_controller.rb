@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class PostsController < MiniPack::Controller
+  before_action :set_post, only: [:show, :edit, :update, :destroy]
+
   def index
     @posts = Post.all.to_a
   end
 
   def show
-    @post = Post.find(params[:id])
   end
 
   def new
@@ -17,28 +18,36 @@ class PostsController < MiniPack::Controller
     # strong parameters は別途対応
     @post = Post.new(title: params[:title], body: params[:body])
     if @post.save
+      flash[:notice] = '投稿を作成しました'
       redirect_to post_path(@post.id)
     else
-      render(template: :new)
+      flash.now[:alert] = '投稿の作成に失敗しました'
+      render template: :new
     end
   end
 
   def edit
-    @post = Post.find(params[:id])
   end
 
   def update
-    @post = Post.find(params[:id])
     if @post.update(title: params[:title], body: params[:body])
-      redirect_to "/posts/#{@post.id}"
+      flash.now[:notice] = '投稿を更新しました'
+      redirect_to post_path(@post.id)
     else
-      render(template: :edit)
+      flash.now[:alert] = '投稿の更新に失敗しました'
+      render template: :edit
     end
   end
 
   def destroy
-    @post = Post.find(params[:id])
     @post.destroy
+    flash[:notice] = '投稿を削除しました'
     redirect_to '/posts'
+  end
+
+  private
+
+  def set_post
+    @post = Post.find(params[:id])
   end
 end
