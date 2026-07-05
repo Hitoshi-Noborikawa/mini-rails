@@ -73,8 +73,10 @@ module MiniPack
     # キーは Symbol で統一する（Rails の HashWithIndifferentAccess 相当はミニ版では未実装）。
     def params
       @params ||= begin
-        base = @request.params.transform_keys(&:to_sym)
-        base.merge(@path_params)
+        base = MiniSupport::HashWithIndifferentAccess.new
+        @request.params.each { |k, v| base[k] = v }
+        @path_params.each { |k, v| base[k] = v }
+        base
       end
     end
 
