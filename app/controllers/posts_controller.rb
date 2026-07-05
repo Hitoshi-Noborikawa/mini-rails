@@ -31,7 +31,7 @@ class PostsController < MiniPack::Controller
 
   def update
     if @post.update(title: params[:title], body: params[:body])
-      flash.now[:notice] = '投稿を更新しました'
+      flash[:notice] = '投稿を更新しました'
       redirect_to post_path(@post.id)
     else
       flash.now[:alert] = '投稿の更新に失敗しました'

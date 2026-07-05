@@ -5,8 +5,7 @@ module MiniPack
     def initialize(session)
       @session = session
       @current = session.delete('_flash') || {} # 前回リクエストの flash
-      @next = {}
-      @now = Now.new(@current) # 遅延評価すると動作しない場合があるのでここで確実に作る
+      @next = MiniSupport::HashWithIndifferentAccess.new
     end
 
     def [](key)
@@ -33,23 +32,9 @@ module MiniPack
       self[:alert] = value
     end
 
-    class Now
-      def initialize(current)
-        @current = current
-      end
-
-      def []=(key, value)
-        @current[key.to_s] = value
-      end
-
-      def [](key)
-        @current[key.to_s]
-      end
-    end
-
     # render 時に使う。現リクエスト内だけで有効で、次のリクエストには渡らない。
     def now
-      @now
+      @current
     end
 
     # レスポンスを返す前に呼び出す。次のリクエスト用の flash を session に保存する
