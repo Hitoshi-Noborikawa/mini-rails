@@ -7,6 +7,7 @@ module MiniRecord
 end
 
 require_relative 'mini_record/connection'
+require_relative 'mini_record/associations'
 require_relative 'mini_record/base'
 require_relative 'mini_record/relation'
 require_relative 'mini_record/migration'
