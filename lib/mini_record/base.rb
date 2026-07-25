@@ -3,6 +3,7 @@
 module MiniRecord
   class Base
     include MiniModel::Validations
+    include MiniRecord::Associations
 
     define_callbacks :save, :create, :update
 

@@ -8,6 +8,7 @@ class PostsController < MiniPack::Controller
   end
 
   def show
+    @comments = @post.comments
   end
 
   def new
