@@ -10,6 +10,10 @@ module MiniRecord
       @records = nil
     end
 
+    def build(attrs = {})
+      @model_class.new(@conditions.merge(attrs))
+    end
+
     def where(more_conditions)
       self.class.new(@model_class, @conditions.merge(more_conditions))
     end
