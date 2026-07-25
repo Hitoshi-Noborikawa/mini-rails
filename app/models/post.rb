@@ -1,4 +1,6 @@
 class Post < MiniRecord::Base
+  has_many :comments
+
   validates :title, presence: true
   validates :body, length: { maximum: 1000 }
 
