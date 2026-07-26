@@ -9,7 +9,5 @@
 
 <h2>Comments</h2>
 <ul>
-  <% @comments.to_a.each do |comment| %>
-    <li><%= comment.body %></li>
-  <% end %>
+  <%= render partial: 'comment', collection: @comments %>
 </ul>
