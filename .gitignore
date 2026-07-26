@@ -3,6 +3,8 @@
 *.log
 tmp/
 
+.env
+
 .ruby-version
 .bundle
 vendor
