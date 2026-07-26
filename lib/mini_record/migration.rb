@@ -2,7 +2,8 @@
 
 module MiniRecord
   class Migration
-    def migrate
+    def migrate(direction)
+      @direction = direction
       change
     end
 
@@ -12,9 +13,13 @@ module MiniRecord
     end
 
     def create_table(table_name, &block)
-      definition = TableDefinition.new(table_name)
-      yield definition # block の中で t.string :title などが呼ばれる
-      Base.connection.execute(definition.to_sql)
+      if @direction == :down
+        Base.connection.execute("DROP TABLE #{table_name};")
+      else
+        definition = TableDefinition.new(table_name)
+        yield definition # block の中で t.string :title などが呼ばれる
+        Base.connection.execute(definition.to_sql)
+      end
     end
   end
 
