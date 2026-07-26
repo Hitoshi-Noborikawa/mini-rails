@@ -14,9 +14,7 @@ module MiniRecord
           version, class_name = parse_filename(path)
           next if executed.include?(version)
 
-          require File.expand_path(path)
-          klass = Object.const_get(class_name)
-          klass.new.migrate
+          run_migration(path, class_name, direction: :up)
           SchemaMigration.record!(version)
           puts " #{class_name} (#{version}) ... done"
           ran_any = true
@@ -25,7 +23,30 @@ module MiniRecord
         puts ' No new migrations' unless ran_any
       end
 
+      def rollback
+        SchemaMigration.ensure_table!
+        latest_version = SchemaMigration.all_versions.sort.last
+
+        if latest_version.nil?
+          puts ' No migrations to roll back'
+          return
+        end
+
+        path = migration_files.find { _1.include?(latest_version) }
+        _, class_name = parse_filename(path)
+
+        run_migration(path, class_name, direction: :down)
+        SchemaMigration.remove!(latest_version)
+        puts " #{class_name} (#{latest_version}) ... reverted"
+      end
+
       private
+
+      def run_migration(path, class_name, direction:)
+        require File.expand_path(path)
+        klass = Object.const_get(class_name)
+        klass.new.migrate(direction)
+      end
 
       # db/migrate/*.rb をファイル名でソートして返す
       # タイムスタンプの prefix で古い順からソートできるようになっている

@@ -25,6 +25,13 @@ module MiniRecord
           version
         )
       end
+
+      def remove!(version)
+        Base.connection.execute(
+          "DELETE FROM #{TABLE_NAME} WHERE version = ?",
+          version
+        )
+      end
     end
   end
 end
