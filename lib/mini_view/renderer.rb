@@ -3,6 +3,7 @@
 module MiniView
   class Renderer
     include Helpers
+    include Partial
     include MiniPack::UrlHelpers
 
     def initialize(controller)
@@ -16,9 +17,13 @@ module MiniView
       end
     end
 
-    def render(action)
-      action_html = render_template(action_template_path(action))
-      render_layout { action_html }
+    def render(action = nil, partial: nil, collection: nil, locals: {})
+      if partial
+        render_partial(partial, collection: collection, locals: locals)
+      else
+        action_html = render_template(action_template_path(action))
+        render_layout { action_html }
+      end
     end
 
     def flash
