@@ -24,8 +24,9 @@ module MiniSupport
     end
 
     # 'posts_controller' → 'PostsController'
+    # 'admin/posts_controller' → 'Admin::PostsController'
     def camelize(term)
-      term.split('_').map(&:capitalize).join
+      term.split('/').map { |part| part.split('_').map(&:capitalize).join }.join('::')
     end
 
     # constantize('String')                    → String （文字列からクラスを返す）
