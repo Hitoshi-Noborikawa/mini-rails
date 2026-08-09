@@ -6,6 +6,7 @@ require_relative 'mini_model'
 require_relative 'mini_record'
 require_relative 'mini_pack'
 require_relative 'mini_view'
+require_relative 'mini_rails/autoloader'
 require_relative 'mini_rails/application'
 
 module MiniRails
