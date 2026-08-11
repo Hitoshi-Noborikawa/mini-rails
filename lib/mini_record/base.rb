@@ -3,6 +3,15 @@
 module MiniRecord
   class RecordNotFound < StandardError; end
 
+  class RecordInvalid < StandardError
+    attr_reader :record
+
+    def initialize(record)
+      @record = record
+      super(record.errors.full_messages.join(', '))
+    end
+  end
+
   class Base
     include MiniModel::Validations
     include MiniRecord::Associations
@@ -31,6 +40,12 @@ module MiniRecord
           run_callbacks(:create) { insert_record }
         end
       end
+    end
+
+    def save!
+      # raise_validation_error を参考。今は RecordNotSaved は気にしない
+      # https://github.com/rails/rails/blob/c0c715b66e98dee1436f06ef682c42ab1de0c7e1/activerecord/lib/active_record/validations.rb#L87
+      save || raise(RecordInvalid, self)
     end
 
     def update(attrs)
@@ -142,6 +157,10 @@ module MiniRecord
 
       def create(attrs)
         new(attrs).tap(&:save)
+      end
+
+      def create!(attrs)
+        new(attrs).tap(&:save!)
       end
     end
   end
