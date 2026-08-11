@@ -98,7 +98,7 @@ module MiniRecord
 
       # 初回呼び出し時に1度だけ実行。columns から動的に attribute accessors を生やす
       def setup_attribute_methods!
-        return if @attribute_method_set
+        return if @attribute_methods_set
 
         columns.each do |col|
           define_method(col)       { instance_variable_get("@#{col}") }
