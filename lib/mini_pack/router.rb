@@ -69,6 +69,8 @@ module MiniPack
       controller_class = "#{route.controller}_controller".camelize.constantize
       response = Rack::Response.new
       controller_class.dispatch(route.action.to_sym, request, response, path_params)
+    rescue MiniRecord::RecordNotFound
+      not_found
     end
 
     def not_found
