@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module MiniRecord
+  class RecordNotFound < StandardError; end
+
   class Base
     include MiniModel::Validations
     include MiniRecord::Associations
@@ -125,7 +127,7 @@ module MiniRecord
           "SELECT * FROM #{table_name} WHERE id = ? LIMIT 1",
           id
         )
-        raise "#{name} not found: id=#{id}" if rows.empty?
+        raise RecordNotFound, "#{name} not found: id=#{id}" if rows.empty?
 
         instantiate(rows.first)
       end
