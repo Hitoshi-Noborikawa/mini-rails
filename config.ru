@@ -3,11 +3,7 @@
 require 'rack/session'
 require 'dotenv/load'
 
-require_relative 'lib/mini_rails'
-
-MiniRails.application.setup!
-MiniRecord::Base.establish_connection('db/development.sqlite3')
-
+require_relative 'config/environment'
 require_relative 'config/routes'
 
 use Rack::Session::Cookie, key: '_mini_rails_session', secret: ENV.fetch('SESSION_SECRET')
