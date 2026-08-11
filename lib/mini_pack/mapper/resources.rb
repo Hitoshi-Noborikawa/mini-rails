@@ -24,7 +24,7 @@ module MiniPack
         patch "#{route.path}/:id", to: "#{route.name}#update"
         delete "#{route.path}/:id", to: "#{route.name}#destroy"
 
-        UrlHelpers.define_method("#{route.name}_path") { path }
+        UrlHelpers.define_method("#{route.name}_path") { route.path }
         UrlHelpers.define_method("new_#{route.singular}_path") { "#{route.path}/new" }
         UrlHelpers.define_method("#{route.singular}_path") { |id| "#{route.path}/#{id}" }
         UrlHelpers.define_method("edit_#{route.singular}_path") { |id| "#{route.path}/#{id}/edit" }
@@ -40,9 +40,9 @@ module MiniPack
         patch "#{route.path}", to: "#{route.name}#update"
         delete "#{route.path}", to: "#{route.name}#destroy"
 
-        UrlHelpers.define_method("new_#{route.singular}_path") { "#{path}/new" }
-        UrlHelpers.define_method("#{route.singular}_path") { path }
-        UrlHelpers.define_method("edit_#{route.singular}_path") { "#{path}/edit" }
+        UrlHelpers.define_method("new_#{route.singular}_path") { "#{route.path}/new" }
+        UrlHelpers.define_method("#{route.singular}_path") { route.path }
+        UrlHelpers.define_method("edit_#{route.singular}_path") { "#{route.path}/edit" }
       end
     end
   end
