@@ -1,11 +1,11 @@
 <h1><%= @post.title %></h1>
 <p><%= @post.body %></p>
-<p><%= link_to('Edit', "/posts/#{@post.id}/edit") %></p>
-<form action="/posts/<%= @post.id %>" method="post">
+<p><%= link_to('Edit', edit_post_path(@post.id)) %></p>
+<form action="<%= post_path(@post.id) %>" method="post">
   <%= method_field(:delete) %>
   <%= submit('Delete') %>
 </form>
-<p><%= link_to('Back', '/posts') %></p>
+<p><%= link_to('Back', posts_path) %></p>
 
 <h2>Comments</h2>
 <ul>
