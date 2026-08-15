@@ -7,6 +7,7 @@ module MiniRecord
     include MiniRecord::ConnectionHandling
     include MiniRecord::ModelSchema
     include MiniRecord::AttributeMethods
+    include MiniRecord::Querying
     include MiniRecord::Persistence
     include MiniRecord::Timestamp
 
@@ -20,26 +21,6 @@ module MiniRecord
 
     def persisted?
       @persisted
-    end
-
-    class << self
-      def find(id)
-        rows = connection.execute(
-          "SELECT * FROM #{table_name} WHERE id = ? LIMIT 1",
-          id
-        )
-        raise RecordNotFound, "#{name} not found: id=#{id}" if rows.empty?
-
-        instantiate(rows.first)
-      end
-
-      def all
-        Relation.new(self)
-      end
-
-      def where(conditions)
-        Relation.new(self, conditions)
-      end
     end
   end
 end

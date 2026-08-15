@@ -18,6 +18,17 @@ module MiniRecord
       self.class.new(@model_class, @conditions.merge(more_conditions))
     end
 
+    def find(*args, &block)
+      return super if block
+      raise ArgumentError, "wrong number of arguments (given #{args.size}, expected 1)" unless args.size == 1
+
+      id = args.first
+      record = where(id: id).to_a.first
+      raise RecordNotFound, "#{@model_class.name} not found: id=#{id}" unless record
+
+      record
+    end
+
     def each(&block)
       load!.each(&block)
     end
