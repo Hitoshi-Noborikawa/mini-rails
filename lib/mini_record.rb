@@ -8,6 +8,7 @@ end
 
 require_relative 'mini_record/connection'
 require_relative 'mini_record/connection_handling'
+require_relative 'mini_record/model_schema'
 require_relative 'mini_record/associations'
 require_relative 'mini_record/persistence'
 require_relative 'mini_record/timestamp'

@@ -16,6 +16,7 @@ module MiniRecord
     include MiniModel::Validations
     include MiniRecord::Associations
     include MiniRecord::ConnectionHandling
+    include MiniRecord::ModelSchema
     include MiniRecord::Persistence
     include MiniRecord::Timestamp
 
@@ -34,23 +35,11 @@ module MiniRecord
     end
 
     class << self
-      def table_name
-        # name は Class#name で、クラス名の文字列を返す
-        name.underscore.pluralize
-      end
-
-      # PRAGMA table_info(posts) で columns 情報を取得
-      # 返り値は [cid, name, type, notnull, dfit_value, pk]
-      # 今回は name だけ使う
-      def columns
-        @columns ||= connection.execute("PRAGMA table_info(#{table_name})").map { _1[1] }
-      end
-
-      # 初回呼び出し時に1度だけ実行。columns から動的に attribute accessors を生やす
+      # 初回呼び出し時に1度だけ実行。column_names から動的に attribute accessors を生やす
       def setup_attribute_methods!
         return if @attribute_methods_set
 
-        columns.each do |col|
+        column_names.each do |col|
           define_method(col)       { instance_variable_get("@#{col}") }
           define_method("#{col}=") { instance_variable_set("@#{col}", _1) }
         end
@@ -61,10 +50,10 @@ module MiniRecord
       # DB から取り出した row を Model のインスタンスに変換する
       def instantiate(row)
         setup_attribute_methods!
-        # columns: ['id', 'title', 'body', ...]
+        # column_names: ['id', 'title', 'body', ...]
         # row    : [1, 'Hello', 'World', ...]
         # => {'id' => 1, 'title' => 'Hello', ...}
-        attrs = columns.zip(row).to_h
+        attrs = column_names.zip(row).to_h
         instance = new(attrs)
         instance.instance_variable_set(:@persisted, true)
         instance
