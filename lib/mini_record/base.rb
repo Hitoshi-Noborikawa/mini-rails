@@ -15,6 +15,7 @@ module MiniRecord
   class Base
     include MiniModel::Validations
     include MiniRecord::Associations
+    include MiniRecord::ConnectionHandling
     include MiniRecord::Persistence
     include MiniRecord::Timestamp
 
@@ -33,14 +34,6 @@ module MiniRecord
     end
 
     class << self
-      def establish_connection(database_path)
-        @@connection = Connection.new(database_path)
-      end
-
-      def connection
-        @@connection
-      end
-
       def table_name
         # name は Class#name で、クラス名の文字列を返す
         name.underscore.pluralize
