@@ -16,6 +16,7 @@ module MiniRecord
     include MiniModel::Validations
     include MiniRecord::Associations
     include MiniRecord::Persistence
+    include MiniRecord::Timestamp
 
     define_callbacks :save, :create, :update
 

@@ -11,7 +11,7 @@ module MiniRecord
         if persisted?
           run_callbacks(:update) { update_record }
         else
-          run_callbacks(:create) { insert_record }
+          run_callbacks(:create) { create_record }
         end
       end
     end
@@ -40,7 +40,7 @@ module MiniRecord
 
     private
 
-    def insert_record
+    def create_record
       cols = self.class.columns - ['id'] # 例: ['title', 'body', 'created_at', 'updated_at']
       values = cols.map { send(_1) } # 例: ['Hello', 'World', nil, nil]
       placeholders = (['?'] * cols.size).join(', ') # '?, ?, ?, ?'
