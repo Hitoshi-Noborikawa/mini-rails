@@ -17,6 +17,7 @@ module MiniRecord
     include MiniRecord::Associations
     include MiniRecord::ConnectionHandling
     include MiniRecord::ModelSchema
+    include MiniRecord::AttributeMethods
     include MiniRecord::Persistence
     include MiniRecord::Timestamp
 
@@ -35,18 +36,6 @@ module MiniRecord
     end
 
     class << self
-      # 初回呼び出し時に1度だけ実行。column_names から動的に attribute accessors を生やす
-      def setup_attribute_methods!
-        return if @attribute_methods_set
-
-        column_names.each do |col|
-          define_method(col)       { instance_variable_get("@#{col}") }
-          define_method("#{col}=") { instance_variable_set("@#{col}", _1) }
-        end
-
-        @attribute_methods_set = true
-      end
-
       # DB から取り出した row を Model のインスタンスに変換する
       def instantiate(row)
         setup_attribute_methods!
