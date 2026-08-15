@@ -6,7 +6,7 @@ module MiniRecord
 
     private
 
-    def insert_record
+    def create_record
       set_timestamp_unless_present(:created_at)
       set_timestamp_unless_present(:updated_at)
       super
