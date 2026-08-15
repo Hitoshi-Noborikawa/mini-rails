@@ -4,6 +4,28 @@ module MiniRecord
   module Persistence
     extend MiniSupport::Concern
 
+    class_methods do
+      # DB から取り出した row を Model のインスタンスに変換する
+      def instantiate(row)
+        setup_attribute_methods!
+        # column_names: ['id', 'title', 'body', ...]
+        # row    : [1, 'Hello', 'World', ...]
+        # => {'id' => 1, 'title' => 'Hello', ...}
+        attrs = column_names.zip(row).to_h
+        instance = new(attrs)
+        instance.instance_variable_set(:@persisted, true)
+        instance
+      end
+
+      def create(attrs)
+        new(attrs).tap(&:save)
+      end
+
+      def create!(attrs)
+        new(attrs).tap(&:save!)
+      end
+    end
+
     def save
       return false unless valid?
 
