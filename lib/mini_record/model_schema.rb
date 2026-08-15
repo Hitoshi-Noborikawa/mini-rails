@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Mini_Record
+module MiniRecord
   module ModelSchema
     extend MiniSupport::Concern
 
