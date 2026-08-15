@@ -9,9 +9,9 @@ module MiniRecord
       def setup_attribute_methods!
         return if @attribute_methods_set
 
-        column_names.each do |col|
-          define_method(col)       { instance_variable_get("@#{col}") }
-          define_method("#{col}=") { instance_variable_set("@#{col}", _1) }
+        column_names.each do |column_name|
+          define_method(column_name)       { instance_variable_get("@#{column_name}") }
+          define_method("#{column_name}=") { instance_variable_set("@#{column_name}", _1) }
         end
 
         @attribute_methods_set = true

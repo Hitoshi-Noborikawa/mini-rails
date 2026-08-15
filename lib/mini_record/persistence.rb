@@ -9,7 +9,7 @@ module MiniRecord
       def instantiate(row)
         setup_attribute_methods!
         # column_names: ['id', 'title', 'body', ...]
-        # row    : [1, 'Hello', 'World', ...]
+        # row         : [1, 'Hello', 'World', ...]
         # => {'id' => 1, 'title' => 'Hello', ...}
         attrs = column_names.zip(row).to_h
         instance = new(attrs)
@@ -64,7 +64,7 @@ module MiniRecord
 
     def create_record
       names = self.class.column_names - ['id'] # 例: ['title', 'body', 'created_at', 'updated_at']
-      values = names.map { send(_1) } # 例: ['Hello', 'World', nil, nil]
+      values = names.map { public_send(_1) } # 例: ['Hello', 'World', nil, nil]
       placeholders = (['?'] * names.size).join(', ') # '?, ?, ?, ?'
       # 生成される SQL の例: INSERT INTO posts (title, body, created_at, updated_at) VALUES (?, ?, ?, ?)
       # バインド引数: 'Hello', 'World', nil, nil
@@ -79,7 +79,7 @@ module MiniRecord
 
     def update_record
       names = self.class.column_names - ['id']
-      values = names.map { send(_1) }
+      values = names.map { public_send(_1) }
       set_clause = names.map { "#{_1} = ?" }.join(', ')
       self.class.connection.execute(
         "UPDATE #{self.class.table_name} SET #{set_clause} WHERE id = ?",

@@ -12,8 +12,6 @@ module MiniRecord
 
     define_callbacks :save, :create, :update
 
-    @@connection = nil
-
     def initialize(attrs = {})
       self.class.setup_attribute_methods!
       @persisted = false
