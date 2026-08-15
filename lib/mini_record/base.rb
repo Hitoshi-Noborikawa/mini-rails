@@ -1,26 +1,16 @@
 # frozen_string_literal: true
 
 module MiniRecord
-  class RecordNotFound < StandardError; end
-
-  class RecordInvalid < StandardError
-    attr_reader :record
-
-    def initialize(record)
-      @record = record
-      super(record.errors.full_messages.join(', '))
-    end
-  end
-
   class Base
     include MiniModel::Validations
     include MiniRecord::Associations
+    include MiniRecord::ConnectionHandling
+    include MiniRecord::ModelSchema
+    include MiniRecord::AttributeMethods
     include MiniRecord::Persistence
     include MiniRecord::Timestamp
 
     define_callbacks :save, :create, :update
-
-    @@connection = nil
 
     def initialize(attrs = {})
       self.class.setup_attribute_methods!
@@ -33,50 +23,6 @@ module MiniRecord
     end
 
     class << self
-      def establish_connection(database_path)
-        @@connection = Connection.new(database_path)
-      end
-
-      def connection
-        @@connection
-      end
-
-      def table_name
-        # name は Class#name で、クラス名の文字列を返す
-        name.underscore.pluralize
-      end
-
-      # PRAGMA table_info(posts) で columns 情報を取得
-      # 返り値は [cid, name, type, notnull, dfit_value, pk]
-      # 今回は name だけ使う
-      def columns
-        @columns ||= connection.execute("PRAGMA table_info(#{table_name})").map { _1[1] }
-      end
-
-      # 初回呼び出し時に1度だけ実行。columns から動的に attribute accessors を生やす
-      def setup_attribute_methods!
-        return if @attribute_methods_set
-
-        columns.each do |col|
-          define_method(col)       { instance_variable_get("@#{col}") }
-          define_method("#{col}=") { instance_variable_set("@#{col}", _1) }
-        end
-
-        @attribute_methods_set = true
-      end
-
-      # DB から取り出した row を Model のインスタンスに変換する
-      def instantiate(row)
-        setup_attribute_methods!
-        # columns: ['id', 'title', 'body', ...]
-        # row    : [1, 'Hello', 'World', ...]
-        # => {'id' => 1, 'title' => 'Hello', ...}
-        attrs = columns.zip(row).to_h
-        instance = new(attrs)
-        instance.instance_variable_set(:@persisted, true)
-        instance
-      end
-
       def find(id)
         rows = connection.execute(
           "SELECT * FROM #{table_name} WHERE id = ? LIMIT 1",
@@ -93,14 +39,6 @@ module MiniRecord
 
       def where(conditions)
         Relation.new(self, conditions)
-      end
-
-      def create(attrs)
-        new(attrs).tap(&:save)
-      end
-
-      def create!(attrs)
-        new(attrs).tap(&:save!)
       end
     end
   end

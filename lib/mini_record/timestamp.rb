@@ -33,7 +33,7 @@ module MiniRecord
     end
 
     def timestamp_column?(column)
-      self.class.columns.include?(column.to_s)
+      self.class.column_names.include?(column.to_s)
     end
   end
 end

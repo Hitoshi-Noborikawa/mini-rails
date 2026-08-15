@@ -4,6 +4,28 @@ module MiniRecord
   module Persistence
     extend MiniSupport::Concern
 
+    class_methods do
+      # DB から取り出した row を Model のインスタンスに変換する
+      def instantiate(row)
+        setup_attribute_methods!
+        # column_names: ['id', 'title', 'body', ...]
+        # row         : [1, 'Hello', 'World', ...]
+        # => {'id' => 1, 'title' => 'Hello', ...}
+        attrs = column_names.zip(row).to_h
+        instance = new(attrs)
+        instance.instance_variable_set(:@persisted, true)
+        instance
+      end
+
+      def create(attrs)
+        new(attrs).tap(&:save)
+      end
+
+      def create!(attrs)
+        new(attrs).tap(&:save!)
+      end
+    end
+
     def save
       return false unless valid?
 
@@ -41,13 +63,13 @@ module MiniRecord
     private
 
     def create_record
-      cols = self.class.columns - ['id'] # 例: ['title', 'body', 'created_at', 'updated_at']
-      values = cols.map { send(_1) } # 例: ['Hello', 'World', nil, nil]
-      placeholders = (['?'] * cols.size).join(', ') # '?, ?, ?, ?'
+      names = self.class.column_names - ['id'] # 例: ['title', 'body', 'created_at', 'updated_at']
+      values = names.map { public_send(_1) } # 例: ['Hello', 'World', nil, nil]
+      placeholders = (['?'] * names.size).join(', ') # '?, ?, ?, ?'
       # 生成される SQL の例: INSERT INTO posts (title, body, created_at, updated_at) VALUES (?, ?, ?, ?)
       # バインド引数: 'Hello', 'World', nil, nil
       self.class.connection.execute(
-        "INSERT INTO #{self.class.table_name} (#{cols.join(', ')}) VALUES (#{placeholders})",
+        "INSERT INTO #{self.class.table_name} (#{names.join(', ')}) VALUES (#{placeholders})",
         *values
       )
       self.id = self.class.connection.last_insert_row_id
@@ -56,9 +78,9 @@ module MiniRecord
     end
 
     def update_record
-      cols = self.class.columns - ['id']
-      values = cols.map { send(_1) }
-      set_clause = cols.map { "#{_1} = ?" }.join(', ')
+      names = self.class.column_names - ['id']
+      values = names.map { public_send(_1) }
+      set_clause = names.map { "#{_1} = ?" }.join(', ')
       self.class.connection.execute(
         "UPDATE #{self.class.table_name} SET #{set_clause} WHERE id = ?",
         *values, id
