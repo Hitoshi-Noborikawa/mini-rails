@@ -24,11 +24,42 @@ module MiniRecord
         spawn(order: @values[:order] + args.flat_map { normalize_order(_1) })
       end
 
+      def reverse_order
+        spawn(order: reverse_sql_order(order_values))
+      end
+
       def limit(value)
         spawn(limit: Integer(value))
       end
 
+      def first
+        ordered_relation.limit(1).to_a.first
+      end
+
+      def last
+        # Post.limit(3).last に対応するため。reverse してしまうと異なる結果を返してしまう
+        return to_a.last if limit_value
+
+        reverse_order.limit(1).to_a.last
+      end
+
       private
+
+      def ordered_relation
+        order_values.empty? ? order(:id) : self
+      end
+
+      def reverse_sql_order(order_values)
+        return [['id', 'DESC']] if order_values.empty?
+
+        order_values.map { |column, direction| [column, direction == 'ASC', ? 'DESC' : 'ASC'] }
+      end
+
+      # @values[:xxx] を直接書くと散らばるので accessor を用意しておく
+      # 参考: https://github.com/rails/rails/blob/c0c715b66e98dee1436f06ef682c42ab1de0c7e1/activerecord/lib/active_record/relation/query_methods.rb#L162-L183
+      def conditions = @values[:conditions]
+      def order_values = @values[:order]
+      def limit_value = @values[:limit]
 
       def normalize_order(arg)
         case arg
