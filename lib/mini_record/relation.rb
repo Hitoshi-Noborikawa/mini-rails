@@ -3,30 +3,19 @@
 module MiniRecord
   class Relation
     include Enumerable
+    include SpawnMethods
+    include QueryMethods
+    include FinderMethods
+    include Calculations
 
-    def initialize(model_class, conditions = {})
+    def initialize(model_class, values = {})
       @model_class = model_class
-      @conditions = conditions
+      @values = { conditions: {}, order: [], limit: nil }.merge(values)
       @records = nil
     end
 
     def build(attrs = {})
-      @model_class.new(@conditions.merge(attrs))
-    end
-
-    def where(more_conditions)
-      self.class.new(@model_class, @conditions.merge(more_conditions))
-    end
-
-    def find(*args, &block)
-      return super if block
-      raise ArgumentError, "wrong number of arguments (given #{args.size}, expected 1)" unless args.size == 1
-
-      id = args.first
-      record = where(id: id).to_a.first
-      raise RecordNotFound, "#{@model_class.name} not found: id=#{id}" unless record
-
-      record
+      @model_class.new(conditions.merge(attrs))
     end
 
     def each(&block)
@@ -37,7 +26,18 @@ module MiniRecord
       load!
     end
 
+    def destroy_all
+      to_a.each(&:destroy)
+    end
+
     private
+
+    def validate_column!(column)
+      name = column.to_s
+      return name if @model_class.column_names.include?(name)
+
+      raise ArgumentError, "unknown column: #{name}"
+    end
 
     def load!
       @records ||= begin
@@ -46,14 +46,32 @@ module MiniRecord
       end
     end
 
-    def build_sql
-      if @conditions.empty?
-        ["SELECT * FROM #{@model_class.table_name}", []]
-      else
-        where_clauses = @conditions.keys.map { "#{_1} = ?" }.join(' AND ')
-        sql = "SELECT * FROM #{@model_class.table_name} WHERE #{where_clauses}"
-        [sql, @conditions.values]
+    def build_sql(select: '*', aggregate: false)
+      sql = +"SELECT #{select} FROM #{@model_class.table_name}"
+      binds = []
+
+      unless conditions.empty?
+        where_clauses = conditions.keys.map { "#{_1} = ?" }.join(' AND ')
+        sql << " WHERE #{where_clauses}"
+        binds.concat(conditions.values)
       end
+
+      unless aggregate
+        unless order_values.empty?
+          order_clauses = order_values.map { |column, direction| "#{column} #{direction}" }.join(', ')
+          sql << " ORDER BY #{order_clauses}"
+        end
+
+        sql << " LIMIT #{limit_value}" if limit_value
+      end
+
+      [sql, binds]
     end
+
+    # @values[:xxx] を直接書くと散らばるので accessor を用意しておく
+    # 参考: https://github.com/rails/rails/blob/c0c715b66e98dee1436f06ef682c42ab1de0c7e1/activerecord/lib/active_record/relation/query_methods.rb#L162-L183
+    def conditions = @values[:conditions]
+    def order_values = @values[:order]
+    def limit_value = @values[:limit]
   end
 end

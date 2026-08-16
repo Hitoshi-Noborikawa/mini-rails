@@ -2,7 +2,9 @@
 
 module MiniRecord
   module Querying
-    QUERYING_METHODS = %i[find where].freeze
+    QUERYING_METHODS = %i[
+      find find_by find_by! first last where order reverse_order limit exists? count pluck destroy_all
+    ].freeze
 
     extend MiniSupport::Concern
 
