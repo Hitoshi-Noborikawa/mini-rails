@@ -3,6 +3,7 @@
 module MiniRecord
   class Relation
     include Enumerable
+    include QueryMethods
 
     def initialize(model_class, values = {})
       @model_class = model_class
@@ -12,10 +13,6 @@ module MiniRecord
 
     def build(attrs = {})
       @model_class.new(@conditions.merge(attrs))
-    end
-
-    def where(more_conditions)
-      spawn(conditions: @values[:conditions].merge(more_conditions))
     end
 
     def find(*args, &block)
