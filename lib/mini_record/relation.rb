@@ -42,7 +42,7 @@ module MiniRecord
       end
     end
 
-    def build_sql(select: '*')
+    def build_sql(select: '*', aggregate: false)
       sql = +"SELECT #{select} FROM #{@model_class.table_name}"
       binds = []
 
@@ -52,7 +52,7 @@ module MiniRecord
         binds.concat(conditions.values)
       end
 
-      if select == '*'
+      unless aggregate
         unless order_values.empty?
           order_clauses = order_values.map { |column, direction| "#{column} #{direction}" }.join(', ')
           sql << " ORDER BY #{order_clauses}"

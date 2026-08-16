@@ -24,6 +24,22 @@ module MiniRecord
       reverse_order.limit(1).to_a.first
     end
 
+    def find_by(conditions)
+      where(conditions).first
+    end
+
+    def find_by!(conditions)
+      find_by(conditions) || raise(RecordNotFound, "#{@model_class.name} not found: #{conditions.inspect}")
+    end
+
+    def exists?
+      !limit(1).to_a.empty?
+    end
+
+    def destroy_all
+      to_a.each(&:destroy)
+    end
+
     private
 
     def ordered_relation
