@@ -3,6 +3,7 @@
 module MiniRecord
   class Relation
     include Enumerable
+    include SpawnMethods
     include QueryMethods
     include FinderMethods
     include Calculations
@@ -49,10 +50,6 @@ module MiniRecord
       return direction.to_s.upcase if VALID_DIRECTIONS.include?(direction)
 
       raise ArgumentError, "Direction \"#{direction}\" is invalid. Value directions are: #{VALID_DIRECTIONS.to_s.inspect}"
-    end
-
-    def spawn(new_values)
-      self.class.new(@model_class, @values.merge(new_values))
     end
 
     def load!
