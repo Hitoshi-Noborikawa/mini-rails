@@ -39,6 +39,30 @@ module MiniRecord
 
     private
 
+    def normalize_order(arg)
+      case arg
+      when Symbol, String
+        [[validate_column!(arg), 'ASC']]
+      when Hash
+        arg.map { |column, direction| [validate_column!(column), validate_direction!(direction)] }
+      else
+        raise ArgumentError, "unsupported order argument: #{arg.inspect}"
+      end
+    end
+
+    def validate_column!(column)
+      name = column.to_s
+      return name if @model_class.column_names.include?(name)
+
+      raise ArgumentError, "unknown column: #{name}"
+    end
+
+    def validate_direction!(direction)
+      return direction.to_s.upcase if VALID_DIRECTIONS.include?(direction)
+
+      raise ArgumentError, "Direction \"#{direction}\" is invalid. Value directions are: #{VALID_DIRECTIONS.to_s.inspect}"
+    end
+
     def spawn(new_values)
       self.class.new(@model_class, @values.merge(new_values))
     end
