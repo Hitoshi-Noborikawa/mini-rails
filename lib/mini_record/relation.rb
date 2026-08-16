@@ -5,6 +5,7 @@ module MiniRecord
     include Enumerable
     include QueryMethods
     include FinderMethods
+    include Calculations
 
     def initialize(model_class, values = {})
       @model_class = model_class
