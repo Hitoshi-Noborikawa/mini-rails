@@ -52,7 +52,7 @@ module MiniRecord
       def reverse_sql_order(order_values)
         return [['id', 'DESC']] if order_values.empty?
 
-        order_values.map { |column, direction| [column, direction == 'ASC', ? 'DESC' : 'ASC'] }
+        order_values.map { |column, direction| [column, direction == 'ASC' ? 'DESC' : 'ASC'] }
       end
 
       # @values[:xxx] を直接書くと散らばるので accessor を用意しておく
