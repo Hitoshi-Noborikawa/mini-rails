@@ -4,9 +4,9 @@ module MiniRecord
   class Relation
     include Enumerable
 
-    def initialize(model_class, conditions = {})
+    def initialize(model_class, values = {})
       @model_class = model_class
-      @conditions = conditions
+      @values = { conditions: {}, order: [], limit: nil }.merge(values)
       @records = nil
     end
 
@@ -15,7 +15,7 @@ module MiniRecord
     end
 
     def where(more_conditions)
-      self.class.new(@model_class, @conditions.merge(more_conditions))
+      spawn(conditions: @values[:conditions].merge(more_conditions))
     end
 
     def find(*args, &block)
@@ -38,6 +38,10 @@ module MiniRecord
     end
 
     private
+
+    def spawn(new_values)
+      self.class.new(@model_class, @values.merge(new_values))
+    end
 
     def load!
       @records ||= begin
