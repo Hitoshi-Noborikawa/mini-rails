@@ -43,6 +43,11 @@ module MiniRecord
         reverse_order.limit(1).to_a.first
       end
 
+      def count
+        sql, binds = build_sql(select: 'COUNT(*)')
+        @model_class.connection.execute(sql, *binds).first.first
+      end
+
       private
 
       def ordered_relation
