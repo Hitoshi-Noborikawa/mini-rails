@@ -26,6 +26,10 @@ module MiniRecord
       load!
     end
 
+    def destroy_all
+      to_a.each(&:destroy)
+    end
+
     private
 
     def validate_column!(column)
