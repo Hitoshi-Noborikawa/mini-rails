@@ -18,17 +18,6 @@ module MiniRecord
         Relation.new(self)
       end
 
-      def first
-        ordered_relation.limit(1).to_a.first
-      end
-
-      def last
-        # Post.limit(3).last に対応するため。reverse してしまうと異なる結果を返してしまう
-        return to_a.last if limit_value
-
-        reverse_order.limit(1).to_a.first
-      end
-
       def count
         sql, binds = build_sql(select: 'COUNT(*)')
         @model_class.connection.execute(sql, *binds).first.first
