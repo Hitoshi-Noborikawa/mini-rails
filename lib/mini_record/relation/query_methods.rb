@@ -2,12 +2,14 @@
 
 module MiniRecord
   module QueryMethods
+    VALID_DIRECTIONS = [:asc, :desc, :ASC, :DESC, 'asc', 'desc', 'ASC', 'DESC'].to_set.freeze
+
     def where(more_conditions)
-      spawn(conditions: @values[:conditions].merge(more_conditions))
+      spawn(conditions: conditions.merge(more_conditions))
     end
 
     def order(*args)
-      spawn(order: @values[:order] + args.flat_map { normalize_order(_1) })
+      spawn(order: order_values + args.flat_map { normalize_order(_1) })
     end
 
     def limit(value)
@@ -17,6 +19,8 @@ module MiniRecord
     def reverse_order
       spawn(order: reverse_sql_order(order_values))
     end
+
+    private
 
     def normalize_order(arg)
       case arg
@@ -29,18 +33,16 @@ module MiniRecord
       end
     end
 
-    VALID_DIRECTIONS = [:asc, :desc, :ASC, :DESC, 'asc', 'desc', 'ASC', 'DESC'].to_set.freeze
-
     def validate_direction!(direction)
       return direction.to_s.upcase if VALID_DIRECTIONS.include?(direction)
 
-      raise ArgumentError, "Direction \"#{direction}\" is invalid. Value directions are: #{VALID_DIRECTIONS.to_s.inspect}"
+      raise ArgumentError, "Direction \"#{direction}\" is invalid. Valid directions are: #{VALID_DIRECTIONS.to_a.inspect}"
     end
 
-    def reverse_sql_order(order_values)
-      return [['id', 'DESC']] if order_values.empty?
+    def reverse_sql_order(order_query)
+      return [['id', 'DESC']] if order_query.empty?
 
-      order_values.map { |column, direction| [column, direction == 'ASC' ? 'DESC' : 'ASC'] }
+      order_query.map { |column, direction| [column, direction == 'ASC' ? 'DESC' : 'ASC'] }
     end
   end
 end

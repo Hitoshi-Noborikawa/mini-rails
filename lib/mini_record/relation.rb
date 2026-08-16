@@ -15,7 +15,7 @@ module MiniRecord
     end
 
     def build(attrs = {})
-      @model_class.new(@conditions.merge(attrs))
+      @model_class.new(conditions.merge(attrs))
     end
 
     def each(&block)
@@ -28,28 +28,11 @@ module MiniRecord
 
     private
 
-    def normalize_order(arg)
-      case arg
-      when Symbol, String
-        [[validate_column!(arg), 'ASC']]
-      when Hash
-        arg.map { |column, direction| [validate_column!(column), validate_direction!(direction)] }
-      else
-        raise ArgumentError, "unsupported order argument: #{arg.inspect}"
-      end
-    end
-
     def validate_column!(column)
       name = column.to_s
       return name if @model_class.column_names.include?(name)
 
       raise ArgumentError, "unknown column: #{name}"
-    end
-
-    def validate_direction!(direction)
-      return direction.to_s.upcase if VALID_DIRECTIONS.include?(direction)
-
-      raise ArgumentError, "Direction \"#{direction}\" is invalid. Value directions are: #{VALID_DIRECTIONS.to_s.inspect}"
     end
 
     def load!
@@ -65,14 +48,14 @@ module MiniRecord
 
       unless conditions.empty?
         where_clauses = conditions.keys.map { "#{_1} = ?" }.join(' AND ')
-        sql << " WHERE #{where_clauses} "
+        sql << " WHERE #{where_clauses}"
         binds.concat(conditions.values)
       end
 
       if select == '*'
         unless order_values.empty?
           order_clauses = order_values.map { |column, direction| "#{column} #{direction}" }.join(', ')
-          sql << " ORDER BY #{order_clauses} "
+          sql << " ORDER BY #{order_clauses}"
         end
 
         sql << " LIMIT #{limit_value}" if limit_value
@@ -80,5 +63,11 @@ module MiniRecord
 
       [sql, binds]
     end
+
+    # @values[:xxx] を直接書くと散らばるので accessor を用意しておく
+    # 参考: https://github.com/rails/rails/blob/c0c715b66e98dee1436f06ef682c42ab1de0c7e1/activerecord/lib/active_record/relation/query_methods.rb#L162-L183
+    def conditions = @values[:conditions]
+    def order_values = @values[:order]
+    def limit_value = @values[:limit]
   end
 end

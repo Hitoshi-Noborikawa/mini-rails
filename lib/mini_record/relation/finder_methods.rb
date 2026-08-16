@@ -23,5 +23,11 @@ module MiniRecord
 
       reverse_order.limit(1).to_a.first
     end
+
+    private
+
+    def ordered_relation
+      order_values.empty? ? order(:id) : self
+    end
   end
 end

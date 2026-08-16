@@ -2,7 +2,7 @@
 
 module MiniRecord
   module Querying
-    QUERYING_METHODS = %i[find where].freeze
+    QUERYING_METHODS = %i[find first last where order reverse_order limit count].freeze
 
     extend MiniSupport::Concern
 
@@ -17,31 +17,6 @@ module MiniRecord
       def all
         Relation.new(self)
       end
-
-      def count
-        sql, binds = build_sql(select: 'COUNT(*)')
-        @model_class.connection.execute(sql, *binds).first.first
-      end
-
-      private
-
-      def ordered_relation
-        order_values.empty? ? order(:id) : self
-      end
-
-      # @values[:xxx] を直接書くと散らばるので accessor を用意しておく
-      # 参考: https://github.com/rails/rails/blob/c0c715b66e98dee1436f06ef682c42ab1de0c7e1/activerecord/lib/active_record/relation/query_methods.rb#L162-L183
-      def conditions = @values[:conditions]
-      def order_values = @values[:order]
-      def limit_value = @values[:limit]
-
-      def validate_column!(column)
-        name = column.to_s
-        return name if @model_class.column_names.include?(name)
-
-        raise ArgumentError, "unknown column: #{name}"
-      end
-
     end
   end
 end
