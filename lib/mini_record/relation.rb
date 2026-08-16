@@ -74,14 +74,26 @@ module MiniRecord
       end
     end
 
-    def build_sql
-      if @conditions.empty?
-        ["SELECT * FROM #{@model_class.table_name}", []]
-      else
-        where_clauses = @conditions.keys.map { "#{_1} = ?" }.join(' AND ')
-        sql = "SELECT * FROM #{@model_class.table_name} WHERE #{where_clauses}"
-        [sql, @conditions.values]
+    def build_sql(select: '*')
+      sql = +"SELECT #{select} FROM #{@model_class.table_name}"
+      binds = []
+
+      unless conditions.empty?
+        where_clauses = conditions.keys.map { "#{_1} = ?" }.join(' AND ')
+        sql << " WHERE #{where_clauses} "
+        binds.concat(conditions.values)
       end
+
+      if select == '*'
+        unless order_values.empty?
+          order_clauses = order_values.map { |column, direction| "#{column} #{direction}" }.join(', ')
+          sql << " ORDER BY #{order_clauses} "
+        end
+
+        sql << " LIMIT #{limit_value}" if limit_value
+      end
+
+      [sql, binds]
     end
   end
 end
