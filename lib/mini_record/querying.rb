@@ -24,6 +24,10 @@ module MiniRecord
         spawn(order: @values[:order] + args.flat_map { normalize_order(_1) })
       end
 
+      def limit(value)
+        spawn(limit: Integer(value))
+      end
+
       private
 
       def normalize_order(arg)
