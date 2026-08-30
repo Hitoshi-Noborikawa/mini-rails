@@ -10,12 +10,12 @@ module MiniRecord
 
     def initialize(model_class, values = {})
       @model_class = model_class
-      @values = { conditions: {}, order: [], limit: nil }.merge(values)
+      @values = { where: WhereClause.new([]), order: [], limit: nil }.merge(values)
       @records = nil
     end
 
     def build(attrs = {})
-      @model_class.new(conditions.merge(attrs))
+      @model_class.new(where_clause.to_h.merge(attrs.transform_keys(&:to_s)))
     end
 
     def each(&block)
@@ -50,10 +50,9 @@ module MiniRecord
       sql = +"SELECT #{select} FROM #{@model_class.table_name}"
       binds = []
 
-      unless conditions.empty?
-        where_clauses = conditions.keys.map { "#{_1} = ?" }.join(' AND ')
-        sql << " WHERE #{where_clauses}"
-        binds.concat(conditions.values)
+      unless where_clause.empty?
+        sql << " WHERE #{where_clause.to_sql}"
+        binds.concat(where_clause.binds)
       end
 
       unless aggregate
@@ -70,7 +69,7 @@ module MiniRecord
 
     # @values[:xxx] を直接書くと散らばるので accessor を用意しておく
     # 参考: https://github.com/rails/rails/blob/c0c715b66e98dee1436f06ef682c42ab1de0c7e1/activerecord/lib/active_record/relation/query_methods.rb#L162-L183
-    def conditions = @values[:conditions]
+    def where_clause = @values[:where]
     def order_values = @values[:order]
     def limit_value = @values[:limit]
   end
