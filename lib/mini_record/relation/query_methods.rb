@@ -4,8 +4,13 @@ module MiniRecord
   module QueryMethods
     VALID_DIRECTIONS = [:asc, :desc, :ASC, :DESC, 'asc', 'desc', 'ASC', 'DESC'].to_set.freeze
 
-    def where(more_conditions)
-      spawn(conditions: conditions.merge(more_conditions))
+    def where(conditions)
+      # TODO: 値の型を見て IN や BETWEEN を出し分ける予定（PredicateBuilder）。今は = だけ
+      predicates = conditions.map do |column, value|
+        [validate_column!(column), '=', value]
+      end
+
+      spawn(where: where_clause + Relation::WhereClause.new(predicates))
     end
 
     def order(*args)
