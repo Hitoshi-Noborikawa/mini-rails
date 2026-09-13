@@ -4,7 +4,7 @@ class PostsController < MiniPack::Controller
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   def index
-    @posts = Post.order(created_at: :desc).to_a
+    @posts = Post.order(created_at: :desc)
   end
 
   def show

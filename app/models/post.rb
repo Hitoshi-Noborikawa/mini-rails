@@ -19,6 +19,6 @@ class Post < MiniRecord::Base
   end
 
   def title_used_by_another_post?
-    Post.where(title: title).to_a.any? { _1.id != id }
+    Post.where(title: title).any? { _1.id != id }
   end
 end
