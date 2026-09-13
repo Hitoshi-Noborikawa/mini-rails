@@ -1,7 +1,7 @@
 <h1><%= @post.title %></h1>
 <p><%= @post.body %></p>
 <p><%= link_to('Edit', edit_post_path(@post.id)) %></p>
-<form action="<%= post_path(@post.id) %>" method="post">
+<form action="<%= post_path(@post.id) %>" method="post" data-confirm="この投稿を削除します。よろしいですか？">
   <%= method_field(:delete) %>
   <%= submit('Delete') %>
 </form>

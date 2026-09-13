@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <title>mini-rails blog</title>
+    <%= stylesheet_link_tag('/application.css') %>
+    <%= javascript_include_tag('/application.js') %>
   </head>
   <body>
     <% if flash[:notice] %>
