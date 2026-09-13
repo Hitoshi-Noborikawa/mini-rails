@@ -22,7 +22,7 @@ module MiniRecord
         end
       end
 
-      # NOTE: WhereCaluse は Arel ノードを返すだけで、本来ここは Arel の visitor で行うが、
+      # NOTE: WhereClause は Arel ノードを返すだけで、本来ここは Arel の visitor で行うが、
       # 現状 Arel を入れていないので、一旦ここで行っている。
       def to_sql
         predicates.map(&:to_sql).join(' AND ')
