@@ -28,5 +28,13 @@ module MiniView
     def method_field(method)
       %(<input type="hidden" name="_method" value="#{method}">)
     end
+
+    def stylesheet_link_tag(path)
+      %(<link rel="stylesheet" href="#{path}">)
+    end
+
+    def javascript_include_tag(path)
+      %(<script src="#{path}" defer></script>)
+    end
   end
 end
