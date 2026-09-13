@@ -1,1 +1,4 @@
-<li><%= comment.body %></li>
+<div class="comment">
+  <p><%= comment.body %></p>
+  <p class="post-meta"><%= format_date(comment.created_at) %></p>
+</div>

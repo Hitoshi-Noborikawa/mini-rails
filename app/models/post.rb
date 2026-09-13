@@ -5,15 +5,20 @@ class Post < MiniRecord::Base
   validates :body, length: { maximum: 1000 }
 
   before_validation :strip_title
-  validate :validate_title_must_start_with_uppercase
+  validate :validate_title_must_unique
 
   def strip_title
     self.title = title&.strip
   end
 
-  def validate_title_must_start_with_uppercase
-    return if title.to_s.empty? || title.to_s.start_with?(/[A-Z]/)
+  def validate_title_must_unique
+    return if title.to_s.empty?
+    return unless title_used_by_another_post?
 
-    errors.add(:title, 'must start with an uppercase letter')
+    errors.add(:title, 'has already been taken')
+  end
+
+  def title_used_by_another_post?
+    Post.where(title: title).any? { _1.id != id }
   end
 end

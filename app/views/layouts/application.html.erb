@@ -7,12 +7,23 @@
     <%= javascript_include_tag('/application.js') %>
   </head>
   <body>
-    <% if flash[:notice] %>
-      <p><%= flash[:notice] %></p>
-    <% end %>
-    <% if flash[:alert] %>
-      <p><%= flash[:alert] %></p>
-    <% end %>
-    <%= yield %>
+    <div class="site">
+      <header class="site-header">
+        <p class="site-title"><%= link_to('mini-rails blog', posts_path) %></p>
+        <nav class="site-nav">
+          <%= link_to('投稿一覧', posts_path) %>
+          <%= link_to('新しい投稿', new_post_path) %>
+        </nav>
+      </header>
+
+      <% if flash[:notice] %>
+        <p class="flash flash-notice"><%= flash[:notice] %></p>
+      <% end %>
+      <% if flash[:alert] %>
+        <p class="flash flash-alert"><%= flash[:alert] %></p>
+      <% end %>
+
+      <%= yield %>
+    </div>
   </body>
 </html>

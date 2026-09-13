@@ -1,0 +1,63 @@
+.site {
+  box-sizing: border-box;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  background: #ffffff;
+  color: #1b1b1d;
+  font-family: system-ui, "Hiragino Kaku Gothic ProN", sans-serif;
+  font-size: 18px;
+  line-height: 1.8;
+}
+.site * { box-sizing: border-box; }
+.site a { color: #a8382c; text-decoration: none; }
+.site a:hover { text-decoration: underline; }
+
+.site-header {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  padding-bottom: 0.75rem; margin-bottom: 1.5rem; border-bottom: 3px solid #1b1b1d;
+}
+.site-title { font-size: 1.5rem; font-weight: 700; margin: 0; letter-spacing: 0.02em; }
+.site-title a { color: #1b1b1d; }
+.site-nav a { font-size: 0.95rem; }
+
+.flash { padding: 0.75rem 1rem; margin-bottom: 1.5rem; border-left: 4px solid; font-size: 0.95rem; }
+.flash-notice { border-color: #2f6b52; background: #eef5f1; color: #1f4a39; }
+.flash-alert { border-color: #a8382c; background: #f7ecea; color: #7e2a21; }
+
+.post-summary { padding-block: 1.25rem; border-bottom: 1px solid #e2e4e8; }
+.post-summary:first-of-type { padding-top: 0; }
+.post-summary h2 { font-size: 1.25rem; font-weight: 700; margin: 0 0 0.25rem; line-height: 1.5; }
+.post-meta { font-size: 0.8rem; color: #6d7079; margin: 0 0 0.5rem; letter-spacing: 0.03em; }
+.post-summary p:last-child { margin: 0; color: #43464d; }
+
+.post-title { font-size: 1.75rem; font-weight: 700; margin: 0 0 0.25rem; line-height: 1.4; }
+.post-body { margin: 1.25rem 0 2rem; white-space: pre-wrap; }
+
+/* 操作はすべて右寄せで揃える */
+.actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; padding-block: 1rem; border-top: 1px solid #e2e4e8; }
+/* 削除は編集の隣だが、誤って押さないよう間隔を広めに取る */
+.actions form { display: inline; margin-left: 2.5rem; }
+
+.comments { margin-top: 2.5rem; }
+.comments h2 { font-size: 1.1rem; font-weight: 700; margin: 0 0 0.75rem; padding-bottom: 0.4rem; border-bottom: 2px solid #1b1b1d; }
+.comment { padding-block: 0.85rem; border-bottom: 1px solid #e2e4e8; }
+.comment p { margin: 0; }
+.comment .post-meta { margin: 0.2rem 0 0; }
+
+.form-field { margin-bottom: 1rem; }
+.form-field label { display: block; font-size: 0.85rem; color: #6d7079; margin-bottom: 0.25rem; letter-spacing: 0.03em; }
+input[type="text"], textarea {
+  width: 100%; padding: 0.5rem 0.65rem; font: inherit;
+  border: 1px solid #b9bdc4; border-radius: 3px; background: #fff;
+}
+textarea { min-height: 7rem; resize: vertical; }
+input[type="submit"] {
+  display: block; margin-left: auto;   /* 送信ボタンも右寄せ */
+  font: inherit; font-weight: 700; padding: 0.5rem 1.5rem;
+  background: #1b1b1d; color: #fff; border: none; border-radius: 3px; cursor: pointer;
+}
+.button-link { font-size: 0.9rem; color: #6d7079; background: none; border: none; padding: 0; font: inherit; cursor: pointer; text-decoration: underline; }
+
+.errors { padding: 0.75rem 1rem 0.75rem 2rem; margin-bottom: 1.25rem; border-left: 4px solid #a8382c; background: #f7ecea; color: #7e2a21; font-size: 0.95rem; }
+.errors li { margin: 0; }
