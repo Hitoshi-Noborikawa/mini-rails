@@ -6,7 +6,7 @@ module MiniRecord
 
     def where(conditions)
       predicates = conditions.map do |column, value|
-       PredicateBuilder.build(validate_column!(column), value)
+        PredicateBuilder.build(validate_column!(column), value)
       end
 
       spawn(where: where_clause + Relation::WhereClause.new(predicates))
