@@ -1,0 +1,26 @@
+<% if @post.errors.any? %>
+  <div class="errors">
+    <ul>
+      <% @post.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<form action="<%= url %>" method="post">
+  <% if override_method %>
+    <%= method_field(override_method) %>
+  <% end %>
+  <div class="form-field">
+    <label>タイトル
+      <%= text_field(:title, @post.title) %>
+    </label>
+  </div>
+  <div class="form-field">
+    <label>本文
+      <%= text_area(:body, @post.body) %>
+    </label>
+  </div>
+  <%= submit(submit_label) %>
+</form>

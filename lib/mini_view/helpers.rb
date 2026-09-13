@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'time'
 require 'erb'
 
 module MiniView
@@ -22,6 +23,19 @@ module MiniView
 
     def submit(text = 'Save')
       %(<input type="submit" value="#{text}">)
+    end
+
+    def truncate(text, length)
+      body = text.to_s
+      return h(body) if body.length <= length
+
+      h("#{body[0, length]}...")
+    end
+
+    def format_date(value)
+      return '' if value.nil?
+
+      Time.parse(value.to_s).strftime('%Y/%m/%d')
     end
 
     # PATCH / DELETE を送りたい時は POST にこの hidden field を追加しておく

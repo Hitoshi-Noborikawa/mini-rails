@@ -1,13 +1,17 @@
-<h1><%= @post.title %></h1>
-<p><%= @post.body %></p>
-<p><%= link_to('Edit', edit_post_path(@post.id)) %></p>
-<form action="<%= post_path(@post.id) %>" method="post" data-confirm="この投稿を削除します。よろしいですか？">
-  <%= method_field(:delete) %>
-  <%= submit('Delete') %>
-</form>
-<p><%= link_to('Back', posts_path) %></p>
+<h1 class="post-title"><%= @post.title %></h1>
+<p class="post-meta"><%= format_date(@post.created_at) %></p>
+<div class="post-body"><%= @post.body %></div>
 
-<h2>Comments</h2>
-<ul>
+<div class="actions">
+  <%= link_to('編集', edit_post_path(@post.id)) %>
+  <form action="<%= post_path(@post.id) %>" method="post"
+        data-confirm="この投稿を削除します。よろしいですか？">
+    <%= method_field(:delete) %>
+    <button type="submit" class="button-link">削除</button>
+  </form>
+</div>
+
+<section class="comments">
+  <h2>コメント <%= @comments.to_a.size %> 件</h2>
   <%= render partial: 'comment', collection: @comments %>
-</ul>
+</section>

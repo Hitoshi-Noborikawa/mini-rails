@@ -1,15 +1,2 @@
-<h1>New Post</h1>
-
-<% if @post.errors.any? %>
-  <ul>
-    <% @post.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-  </ul>
-<% end %>
-
-<form action="<%= posts_path %>" method="post">
-  <p><%= text_field(:title, @post.title) %></p>
-  <p><%= text_area(:body, @post.body) %></p>
-  <p><%= submit('Create') %></p>
-</form>
+<h1 class="post-title">新しい投稿</h1>
+<%= render partial: 'form', locals: { url: posts_path, override_method: nil, submit_label: '作成する' } %>
