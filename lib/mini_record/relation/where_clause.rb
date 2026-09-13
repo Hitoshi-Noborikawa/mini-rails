@@ -17,24 +17,19 @@ module MiniRecord
       end
 
       def to_h
-        # TODO: IN や BETWEEN を追加した際は to_h する条件を = だけに絞る。
-        # id IN (1, 2) という条件では絞れないため。
-        predicates.to_h do |column, _operator, value|
-          [column, value]
+        predicates.select(&:equality?).to_h do |predicate|
+          [predicate.column, predicate.value]
         end
       end
 
-      # NOTE: WhereCaluse は Arel ノードを返すだけで、本来ここは Arel の visitor で行うが、
+      # NOTE: WhereClause は Arel ノードを返すだけで、本来ここは Arel の visitor で行うが、
       # 現状 Arel を入れていないので、一旦ここで行っている。
       def to_sql
-        # TODO: ? は SQLite の方言なので別の DB 加えるときに剥がす
-        predicates.map do |column, operator, _value|
-          "#{column} #{operator} ?"
-        end.join(' AND ')
+        predicates.map(&:to_sql).join(' AND ')
       end
 
       def binds
-        predicates.map(&:last)
+        predicates.flat_map(&:binds)
       end
 
       protected
