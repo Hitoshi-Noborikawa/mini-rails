@@ -17,12 +17,6 @@ module MiniSupport
       end
     end
 
-    # class_methods do
-    #  def foo
-    #  end
-    # end
-    # を書くと、M::ClassMethods に foo が定義される
-    # なければ作る
     def class_methods(&block)
       mod = const_defined?(:ClassMethods, false) ? const_get(:ClassMethods) : const_set(:ClassMethods, Module.new)
       mod.module_eval(&block)

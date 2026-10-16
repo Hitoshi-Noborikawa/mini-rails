@@ -1,3 +1,4 @@
+/** demo用 */
 .site {
   box-sizing: border-box;
   max-width: 44rem;
@@ -34,9 +35,7 @@
 .post-title { font-size: 1.75rem; font-weight: 700; margin: 0 0 0.25rem; line-height: 1.4; }
 .post-body { margin: 1.25rem 0 2rem; white-space: pre-wrap; }
 
-/* 操作はすべて右寄せで揃える */
 .actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; padding-block: 1rem; border-top: 1px solid #e2e4e8; }
-/* 削除は編集の隣だが、誤って押さないよう間隔を広めに取る */
 .actions form { display: inline; margin-left: 2.5rem; }
 
 .comments { margin-top: 2.5rem; }

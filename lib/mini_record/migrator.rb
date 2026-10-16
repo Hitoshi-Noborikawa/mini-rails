@@ -48,13 +48,11 @@ module MiniRecord
         klass.new.migrate(direction)
       end
 
-      # db/migrate/*.rb をファイル名でソートして返す
       def migration_files
         Dir["#{MIGRATIONS_DIR}/*.rb"].sort
       end
 
       # 例: '20260517000000_create_posts.rb' → ['20260517000000', 'CreatePosts']
-      # ファイル名のタイムスタンプとクラス名を分離する
       def parse_filename(path)
         basename = File.basename(path, '.rb')
         version, name_part = basename.split('_', 2)

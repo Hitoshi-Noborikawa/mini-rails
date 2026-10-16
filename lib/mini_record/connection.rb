@@ -19,7 +19,6 @@ module MiniRecord
 
     private
 
-    # MiniRecord.verbose が true の時だけ SQL を出力する
     def log(sql, binds)
       return unless MiniRecord.verbose
 

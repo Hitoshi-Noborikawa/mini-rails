@@ -44,7 +44,6 @@ module MiniPack
       end
 
       public_send(action)
-      # action が明示的に render を呼び出さなかった時のフォールバック
       default_render(action) unless @_rendered
     end
 

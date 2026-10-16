@@ -53,7 +53,6 @@ module MiniPack
 
     private
 
-    # このリクエストを処理すべき HTTP メソッドを返す
     # GET など POST 以外はそのままに、POST だけは _method が含まれていることを考慮する
     # （Rack::MethodOverride）に合わせている
     def http_method_for(request)
@@ -64,7 +63,6 @@ module MiniPack
       override ? override.downcase.to_sym : :post
     end
 
-    # Route から controller クラスを取得して dispatch する
     def dispatch(route, request, path_params)
       controller_class = "#{route.controller}_controller".camelize.constantize
       response = Rack::Response.new
