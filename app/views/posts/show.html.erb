@@ -14,4 +14,13 @@
 <section class="comments">
   <h2>コメント <%= @comments.to_a.size %> 件</h2>
   <%= render partial: 'comment', collection: @comments %>
+
+  <form action="/posts/<%= @post.id %>/comments" method="post">
+    <div class="form-field">
+      <label>コメント
+        <%= text_area(:body) %>
+      </label>
+    </div>
+    <%= submit('コメントする') %>
+  </form>
 </section>
