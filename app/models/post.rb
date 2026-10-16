@@ -3,9 +3,9 @@ class Post < MiniRecord::Base
 
   validates :title, presence: true
   validates :body, length: { maximum: 1000 }
+  validate :validate_title_must_unique
 
   before_validation :strip_title
-  validate :validate_title_must_unique
 
   def strip_title
     self.title = title&.strip
