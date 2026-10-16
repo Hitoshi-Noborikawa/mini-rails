@@ -49,7 +49,6 @@ module MiniRecord
       end
 
       # db/migrate/*.rb をファイル名でソートして返す
-      # タイムスタンプの prefix で古い順からソートできるようになっている
       def migration_files
         Dir["#{MIGRATIONS_DIR}/*.rb"].sort
       end

@@ -63,11 +63,9 @@ module MiniRecord
     private
 
     def create_record
-      names = self.class.column_names - ['id'] # 例: ['title', 'body', 'created_at', 'updated_at']
-      values = names.map { public_send(_1) } # 例: ['Hello', 'World', nil, nil]
-      placeholders = (['?'] * names.size).join(', ') # '?, ?, ?, ?'
-      # 生成される SQL の例: INSERT INTO posts (title, body, created_at, updated_at) VALUES (?, ?, ?, ?)
-      # バインド引数: 'Hello', 'World', nil, nil
+      names = self.class.column_names - ['id']
+      values = names.map { public_send(_1) }
+      placeholders = (['?'] * names.size).join(', ')
       self.class.connection.execute(
         "INSERT INTO #{self.class.table_name} (#{names.join(', ')}) VALUES (#{placeholders})",
         *values

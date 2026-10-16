@@ -79,7 +79,6 @@ module MiniModel
       value = public_send(attribute)
       return if value.nil?
 
-      # length: { maximum: N } を受け取る
       if options[:maximum] && value.length > options[:maximum]
         errors.add(attribute, "is too long (maximum is #{options[:maximum]} characters)")
       end
