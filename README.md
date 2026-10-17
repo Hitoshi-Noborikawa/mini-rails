@@ -1,6 +1,10 @@
 # mini-rails
 
-A small web framework built for learning how Rails works. It is modeled mainly on Rails 1–3.
+A small web framework built for learning how Rails works.
+
+Its structure follows current Rails: not only the components, but most of the files and classes inside them use almost the same names as the ones in the Rails source.
+
+It does not aim to cover what Rails can do. Only the parts you need in order to follow the mechanics are implemented, so most features are missing.
 
 A mini blog is included as a sample app.
 
