@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module MiniPack
-  # method:      HTTP メソッド (:get / :post / ...)
-  # pattern:     元の URL 文字列 ('/posts/:id')
-  # regex:       マッチ判定用に pattern を変換した正規表現
+  # method:      HTTP method (:get / :post / ...)
+  # pattern:     the original URL String ('/posts/:id')
+  # regex:       pattern compiled into a Regexp for matching
   #               ('/posts/:id' → /\A\/posts\/(?<id>[^\/]+)\z/)
-  # param_names: pattern に含まれる :name の "name" 部分を並べた配列。
+  # param_names: the "name" parts of each :name in pattern.
   #               '/posts/:id' → ['id']
   #               '/users/:user_id/posts/:id' → ['user_id', 'id']
-  #               リクエストが来てマッチした後、これを元に match[name] で値を取り出して params[:id] = '42' のように組み立てる。
-  # controller:  'posts' のような controller 名文字列
-  #               (dispatch 時に PostsController に constantize する)
-  # action:      'index' のような action 名文字列
+  #               After a request matches, each value is taken with match[name] to build params like params[:id] = '42'.
+  # controller:  controller name String such as 'posts'
+  #               (constantized into PostsController on dispatch)
+  # action:      action name String such as 'index'
   Route = Struct.new(:method, :pattern, :regex, :param_names, :controller, :action)
 
   class Router
@@ -19,7 +19,7 @@ module MiniPack
       @routes = []
     end
 
-    # 例:
+    # e.g.
     # routes.draw do
     #   get '/posts', to: 'posts#index'
     # end
@@ -27,7 +27,7 @@ module MiniPack
       Mapper.new(@routes).instance_eval(&block)
     end
 
-    # env を受け取って [status, headers, body] を返す
+    # Takes env and returns [status, headers, body]
     def call(env)
       request = Rack::Request.new(env)
       http_method = http_method_for(request)
@@ -39,9 +39,9 @@ module MiniPack
         match = route.regex.match(path)
         next unless match
 
-        # Rack の PATH_INFO は ASCII-8BIT エンコーディングなので、正規表現で取り出した値も
-        # ASCII-8BIT になる。そのまま SQLite3 に bind すると BLOB 扱いされて integer の id と
-        # マッチしないので、UTF-8 にエンコーディングを差し替えてから渡す。
+        # Rack's PATH_INFO is ASCII-8BIT, so values captured by the Regexp are ASCII-8BIT too.
+        # SQLite3 binds them as BLOBs that never match an integer id,
+        # so the encoding is switched to UTF-8 before passing them on.
         path_params = route.param_names.to_h do |name|
           [name.to_sym, match[name].dup.force_encoding(Encoding::UTF_8)]
         end
@@ -53,8 +53,8 @@ module MiniPack
 
     private
 
-    # GET など POST 以外はそのままに、POST だけは _method が含まれていることを考慮する
-    # （Rack::MethodOverride）に合わせている
+    # Methods other than POST are used as is. Only POST honors _method,
+    # matching Rack::MethodOverride
     def http_method_for(request)
       actual = request.request_method.downcase.to_sym
       return actual unless actual == :post

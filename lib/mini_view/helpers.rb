@@ -38,7 +38,7 @@ module MiniView
       Time.parse(value.to_s).strftime('%Y/%m/%d')
     end
 
-    # PATCH / DELETE を送りたい時は POST にこの hidden field を追加しておく
+    # To send PATCH / DELETE, add this hidden field to a POST form
     def method_field(method)
       %(<input type="hidden" name="_method" value="#{method}">)
     end

@@ -16,13 +16,13 @@ class PostsController < MiniPack::Controller
   end
 
   def create
-    # strong parameters は別途対応
+    # Strong parameters will be handled separately
     @post = Post.new(title: params[:title], body: params[:body])
     if @post.save
-      flash[:notice] = '投稿を作成しました'
+      flash[:notice] = 'Post was successfully created.'
       redirect_to post_path(@post.id)
     else
-      flash.now[:alert] = '投稿の作成に失敗しました'
+      flash.now[:alert] = 'Post could not be created.'
       render template: :new
     end
   end
@@ -32,17 +32,17 @@ class PostsController < MiniPack::Controller
 
   def update
     if @post.update(title: params[:title], body: params[:body])
-      flash[:notice] = '投稿を更新しました'
+      flash[:notice] = 'Post was successfully updated.'
       redirect_to post_path(@post.id)
     else
-      flash.now[:alert] = '投稿の更新に失敗しました'
+      flash.now[:alert] = 'Post could not be updated.'
       render template: :edit
     end
   end
 
   def destroy
     @post.destroy
-    flash[:notice] = '投稿を削除しました'
+    flash[:notice] = 'Post was successfully destroyed.'
     redirect_to posts_path
   end
 

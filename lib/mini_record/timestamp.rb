@@ -18,9 +18,9 @@ module MiniRecord
     end
 
     def set_timestamp_unless_present(column)
-      # t.timestamps を書いていないテーブルもあるため、実在するカラムだけを対象にする
+      # Some tables have no t.timestamps, so only existing columns are touched
       return unless timestamp_column?(column)
-      # 明示的に日時がある場合は優先する
+      # An explicitly assigned time takes precedence
       return if public_send(column)
 
       set_timestamp(column)

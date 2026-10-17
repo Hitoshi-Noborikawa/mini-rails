@@ -2,7 +2,7 @@
 
 module MiniSupport
   module Concern
-    # `extend MiniSupport::Concern` した際に呼び出される
+    # Called when a module does `extend MiniSupport::Concern`
     def self.extended(base)
       base.instance_variable_set(:@_included_block, nil)
       base.instance_variable_set(:@_dependencies, [])
@@ -10,7 +10,7 @@ module MiniSupport
 
     def included(base = nil, &block)
       if base.nil?
-        # included do ... end のように block であれば登録しておく
+        # With a block, as in included do ... end, store it for later
         @_included_block = block
       else
         super
@@ -25,11 +25,11 @@ module MiniSupport
     def append_features(base)
 
       if base.instance_variable_defined?(:@_dependencies)
-        # extend MiniSupport::Concern するのは module なので class じゃないと判定
+        # Only modules extend MiniSupport::Concern, so this base is a concern, not a class
         base.instance_variable_get(:@_dependencies) << self
         false
       else
-        # self が base で既に include 済みであれば、二重になってしまうので抜ける
+        # Return if base already includes self, to avoid including it twice
         return false if base < self
 
         @_dependencies.each { base.include(_1) }

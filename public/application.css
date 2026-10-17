@@ -1,4 +1,4 @@
-/** demo用 */
+/** For the demo */
 .site {
   box-sizing: border-box;
   max-width: 44rem;
@@ -52,7 +52,7 @@ input[type="text"], textarea {
 }
 textarea { min-height: 7rem; resize: vertical; }
 input[type="submit"] {
-  display: block; margin-left: auto;   /* 送信ボタンも右寄せ */
+  display: block; margin-left: auto;   /* Right-align the submit button too */
   font: inherit; font-weight: 700; padding: 0.5rem 1.5rem;
   background: #1b1b1d; color: #fff; border: none; border-radius: 3px; cursor: pointer;
 }

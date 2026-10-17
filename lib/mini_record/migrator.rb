@@ -52,7 +52,7 @@ module MiniRecord
         Dir["#{MIGRATIONS_DIR}/*.rb"].sort
       end
 
-      # 例: '20260517000000_create_posts.rb' → ['20260517000000', 'CreatePosts']
+      # e.g. '20260517000000_create_posts.rb' → ['20260517000000', 'CreatePosts']
       def parse_filename(path)
         basename = File.basename(path, '.rb')
         version, name_part = basename.split('_', 2)

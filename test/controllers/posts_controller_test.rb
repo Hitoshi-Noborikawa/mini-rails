@@ -20,7 +20,7 @@ class PostsControllerTest < IntegrationTest
 
     get '/posts'
 
-    assert_includes last_response.body, 'コメント 2 件'
+    assert_includes last_response.body, 'Comments (2)'
   end
 
   test 'the show page displays the body and comments' do
@@ -44,7 +44,7 @@ class PostsControllerTest < IntegrationTest
     follow_redirect!
 
     assert_equal "/posts/#{Post.find_by!(title: 'Hello').id}", last_request.path
-    assert_includes last_response.body, '投稿を作成しました'
+    assert_includes last_response.body, 'Post was successfully created.'
   end
 
   test 'a blank title re-renders the form with errors' do
@@ -61,7 +61,7 @@ class PostsControllerTest < IntegrationTest
     post "/posts/#{post_record.id}", _method: 'patch', title: 'Bye', body: 'Updated'
     follow_redirect!
 
-    assert_includes last_response.body, '投稿を更新しました'
+    assert_includes last_response.body, 'Post was successfully updated.'
     assert_includes last_response.body, 'Updated'
   end
 
@@ -72,7 +72,7 @@ class PostsControllerTest < IntegrationTest
     follow_redirect!
 
     assert_equal '/posts', last_request.path
-    assert_includes last_response.body, '投稿を削除しました'
+    assert_includes last_response.body, 'Post was successfully destroyed.'
     refute_includes last_response.body, 'Hello'
   end
 end

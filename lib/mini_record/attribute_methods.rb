@@ -5,7 +5,7 @@ module MiniRecord
     extend MiniSupport::Concern
 
     class_methods do
-      # 初回呼び出し時に1度だけ実行。column_names から動的に attribute accessors を生やす
+      # Runs only once, on the first call. Defines attribute accessors dynamically from column_names
       def setup_attribute_methods!
         return if @attribute_methods_set
 

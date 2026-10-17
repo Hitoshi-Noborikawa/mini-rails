@@ -3,7 +3,7 @@
 module MiniRecord
   class Relation
     class WhereClause
-      # NOTE: Arel は未実装なので最小構成にしている
+      # NOTE: Arel isn't implemented, so this is kept minimal
       def initialize(predicates)
         @predicates = predicates
       end
@@ -22,8 +22,8 @@ module MiniRecord
         end
       end
 
-      # NOTE: WhereClause は Arel ノードを返すだけで、本来ここは Arel の visitor で行うが、
-      # 現状 Arel を入れていないので、一旦ここで行っている。
+      # NOTE: In Rails, WhereClause only returns Arel nodes and an Arel visitor builds the SQL.
+      # There is no Arel here yet, so the SQL is built here for now.
       def to_sql
         predicates.map(&:to_sql).join(' AND ')
       end

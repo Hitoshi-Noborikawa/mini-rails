@@ -10,7 +10,7 @@ class CommentsControllerTest < IntegrationTest
     follow_redirect!
 
     assert_equal "/posts/#{post_record.id}", last_request.path
-    assert_includes last_response.body, 'コメントを投稿しました'
+    assert_includes last_response.body, 'Comment was successfully created.'
     assert_includes last_response.body, 'Nice'
   end
 
@@ -20,7 +20,7 @@ class CommentsControllerTest < IntegrationTest
     post "/posts/#{post_record.id}/comments", body: ''
     follow_redirect!
 
-    assert_includes last_response.body, 'コメントを入力してください'
+    assert_includes last_response.body, "Comment can't be blank."
     assert_equal 0, Comment.count
   end
 end

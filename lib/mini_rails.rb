@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'mini_support'
-# mini_record よりも前に load させることで include できるようにしている
+# Loaded before mini_record so that MiniRecord::Base can include it
 require_relative 'mini_model'
 require_relative 'mini_record'
 require_relative 'mini_pack'

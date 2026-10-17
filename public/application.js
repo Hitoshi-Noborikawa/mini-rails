@@ -1,4 +1,4 @@
-// data-turbo-confirm の簡易版
+// A simplified data-turbo-confirm
 document.addEventListener('submit', (event) => {
   const message = event.target.dataset.confirm
   if (message && !window.confirm(message)) {

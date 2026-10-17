@@ -6,9 +6,9 @@ class CommentsController < MiniPack::Controller
     comment = post.comments.build(body: params[:body])
 
     if comment.save
-      flash[:notice] = 'コメントを投稿しました'
+      flash[:notice] = 'Comment was successfully created.'
     else
-      flash[:alert] = 'コメントを入力してください'
+      flash[:alert] = "Comment can't be blank."
     end
 
     redirect_to post_path(post.id)

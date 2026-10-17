@@ -29,9 +29,9 @@ module MiniSupport
       term.split('/').map { |part| part.split('_').map(&:capitalize).join }.join('::')
     end
 
-    # constantize('String')                    → String （文字列からクラスを返す）
+    # constantize('String')                    → String (returns the class for a String)
     # constantize('Hash')                      → Hash
-    # constantize('ActiveSupport::Inflector')  → ActiveSupport::Inflector（moduleも）
+    # constantize('ActiveSupport::Inflector')  → ActiveSupport::Inflector (modules too)
     def constantize(camel_cased_word)
       Object.const_get(camel_cased_word)
     end

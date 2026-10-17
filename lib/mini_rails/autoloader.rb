@@ -2,9 +2,9 @@
 
 module MiniRails
   class Autoloader
-    # inflector を引数で渡せるようにしておく。
-    # Zeitwerk も loader.inflector = ... で差し替えられるようにしており、loader 自体が特定の Inflector に依存しないためにしている。
-    # （本家だと他の gem から利用することも考慮しているため）
+    # The inflector can be passed in as an argument.
+    # Zeitwerk likewise lets you swap it with loader.inflector = ..., so the loader doesn't depend on a specific Inflector.
+    # (Zeitwerk is also meant to be used by other gems.)
     # https://github.com/fxn/zeitwerk/blob/fe92d109e290d875b95a002dd75c140a851b6baa/lib/zeitwerk/loader/config.rb#L14
     def initialize(inflector: MiniSupport::Inflector)
       @dirs = []
@@ -26,12 +26,12 @@ module MiniRails
         abspath = File.join(dir, basename)
 
         if File.directory?(abspath)
-          # .../app/models/human/ ディレクトリの場合
-          # define_autoloads(.../app/models/human, Object.const_set(:Human, Module.new)) となる
+          # For the directory .../app/models/human/
+          # define_autoloads(.../app/models/human, Object.const_set(:Human, Module.new))
           define_autoloads(abspath, namespace.const_set(cname(basename), Module.new))
         elsif basename.end_with?('.rb')
-          # basename = 'post.rb' の場合
-          # Object.autoload(:Post, '.../app/models/post.rb') となる
+          # For basename = 'post.rb'
+          # Object.autoload(:Post, '.../app/models/post.rb')
           namespace.autoload(cname(basename.delete_suffix('.rb')), abspath)
         end
       end
