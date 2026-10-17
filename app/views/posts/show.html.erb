@@ -3,24 +3,24 @@
 <div class="post-body"><%= @post.body %></div>
 
 <div class="actions">
-  <%= link_to('編集', edit_post_path(@post.id)) %>
+  <%= link_to('Edit', edit_post_path(@post.id)) %>
   <form action="<%= post_path(@post.id) %>" method="post"
-        data-confirm="この投稿を削除します。よろしいですか？">
+        data-confirm="Are you sure?">
     <%= method_field(:delete) %>
-    <button type="submit" class="button-link">削除</button>
+    <button type="submit" class="button-link">Delete</button>
   </form>
 </div>
 
 <section class="comments">
-  <h2>コメント <%= @comments.to_a.size %> 件</h2>
+  <h2>Comments (<%= @comments.to_a.size %>)</h2>
   <%= render partial: 'comment', collection: @comments %>
 
   <form action="/posts/<%= @post.id %>/comments" method="post">
     <div class="form-field">
-      <label>コメント
+      <label>Comment
         <%= text_area(:body) %>
       </label>
     </div>
-    <%= submit('コメントする') %>
+    <%= submit('Add comment') %>
   </form>
 </section>

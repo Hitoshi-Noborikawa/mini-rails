@@ -4,7 +4,7 @@ module MiniPack
   class Flash
     def initialize(session)
       @session = session
-      @current = session.delete('_flash') || {} # 前回リクエストの flash
+      @current = session.delete('_flash') || {} # flash from the previous request
       @next = MiniSupport::HashWithIndifferentAccess.new
     end
 
@@ -32,12 +32,12 @@ module MiniPack
       self[:alert] = value
     end
 
-    # render 時に使う。現リクエスト内だけで有効で、次のリクエストには渡らない。
+    # Used with render. Valid only in the current request and not carried to the next one.
     def now
       @current
     end
 
-    # レスポンスを返す前に呼び出す。次のリクエスト用の flash を session に保存する
+    # Called before returning the response. Saves the flash for the next request in the session
     def persist!
       @next.any? ? @session['_flash'] = @next : @session.delete('_flash')
     end

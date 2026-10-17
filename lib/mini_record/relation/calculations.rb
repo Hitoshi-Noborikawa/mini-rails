@@ -2,8 +2,8 @@
 
 module MiniRecord
   module Calculations
-    # FIXME: limit が無視される。Post.limit(2).count は 2 ではなく全件数を返す（SELECT COUNT(*) ... LIMIT 2）
-    # has_limit_or_offset? のときサブクエリで包めば良さそう。（offset も追加しないと）
+    # FIXME: limit is ignored. Post.limit(2).count returns the total count, not 2 (SELECT COUNT(*) ... LIMIT 2)
+    # Wrapping it in a subquery when has_limit_or_offset? should fix it (offset needs adding too)
     # https://github.com/rails/rails/blob/c0c715b66e98dee1436f06ef682c42ab1de0c7e1/activerecord/lib/active_record/relation/calculations.rb#L668-L689
     def count
       sql, binds = build_sql(select: 'COUNT(*)', aggregate: true)

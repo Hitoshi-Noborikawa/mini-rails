@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+Dir.chdir(File.expand_path('..', __dir__))
+
+files = ARGV.empty? ? Dir['test/**/*_test.rb'].sort : ARGV.dup
+ARGV.clear
+
+files.each { require File.expand_path(_1) }

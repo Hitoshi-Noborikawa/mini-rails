@@ -10,7 +10,7 @@ module MiniModel
       @messages[attribute] << message
     end
 
-    # 例: post.errors[:title] => ["can't be blank"]
+    # e.g. post.errors[:title] => ["can't be blank"]
     def [](attribute)
       @messages[attribute]
     end
@@ -27,7 +27,7 @@ module MiniModel
       @messages.clear
     end
 
-    # ['Title can't be blank', ...] の形に整形する
+    # Formats messages as ['Title can't be blank', ...]
     def full_messages
       @messages.flat_map do |attribute, messages|
         messages.map { |message| "#{attribute.to_s.capitalize} #{message}" }

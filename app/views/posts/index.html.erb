@@ -1,7 +1,7 @@
 <% @posts.each do |post| %>
   <article class="post-summary">
     <h2><%= link_to(post.title, post_path(post.id)) %></h2>
-    <p class="post-meta"><%= format_date(post.created_at) %> ・ コメント <%= post.comments.count %> 件</p>
+    <p class="post-meta"><%= format_date(post.created_at) %> · Comments (<%= post.comments.count %>)</p>
     <p><%= truncate(post.body, 80) %></p>
   </article>
 <% end %>

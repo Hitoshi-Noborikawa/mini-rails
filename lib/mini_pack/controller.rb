@@ -5,7 +5,7 @@ module MiniPack
     include MiniPack::UrlHelpers
 
     class << self
-      # Router からリクエストごとに呼び出される。インスタンスを混ぜないため
+      # Called by Router for each request, with a new instance so requests don't share state
       def dispatch(action, request, response, path_params)
         new.dispatch(action, request, response, path_params)
       end
@@ -68,8 +68,8 @@ module MiniPack
       [response.status, response.headers, response.body]
     end
 
-    # クエリ (?keyword=...) と form ボディと URL の path パラメータ (:id) を1つの Hash にまとめる。
-    # キーは Symbol で統一する（Rails の HashWithIndifferentAccess 相当はミニ版では未実装）。
+    # Merges the query (?keyword=...), the form body and the path params (:id) into one Hash.
+    # It is a HashWithIndifferentAccess, so keys can be read as either Symbol or String.
     def params
       @params ||= begin
         base = MiniSupport::HashWithIndifferentAccess.new

@@ -8,7 +8,7 @@ module MiniSupport
       super(key.to_s)
     end
 
-    # Hash#merge だと渡されたキーを変換せずにしようするため、result[k] = v の形で []= を使用させている
+    # Hash#merge would keep the given keys as they are, so each pair goes through []= via result[k] = v
     def merge(other)
       result = self.class.new
       each { |k, v| result[k] = v }

@@ -5,7 +5,7 @@ module MiniRecord
     extend MiniSupport::Concern
 
     class_methods do
-      # DB から取り出した row を Model のインスタンスに変換する
+      # Turns a row fetched from the DB into a model instance
       def instantiate(row)
         setup_attribute_methods!
         # column_names: ['id', 'title', 'body', ...]
@@ -39,7 +39,7 @@ module MiniRecord
     end
 
     def save!
-      # raise_validation_error を参考。今は RecordNotSaved は気にしない
+      # Based on raise_validation_error. RecordNotSaved is ignored for now
       # https://github.com/rails/rails/blob/c0c715b66e98dee1436f06ef682c42ab1de0c7e1/activerecord/lib/active_record/validations.rb#L87
       save || raise(RecordInvalid, self)
     end

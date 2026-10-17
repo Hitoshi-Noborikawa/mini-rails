@@ -3,42 +3,42 @@
 posts = [
   {
     title: 'Hello, mini-rails',
-    body: 'ブログを作った。といっても Rails ではなく、Rails を真似た何かを自分で書いている。まずは1行返すところまで。なぜ作りはじめたのかは、そのうち書こうと思う。',
+    body: "I made a blog. Not with Rails, though. I'm writing something that imitates Rails myself. For now it just returns one line. I'll write about why I started some other time.",
     created_at: '2026-08-01 10:00:00 +0900'
   },
   {
-    title: 'Rack から始めた',
-    body: 'config.ru に書いた call(env) が呼ばれて、ブラウザに文字が出た。これだけで Web アプリケーションと呼んでいいらしい。フレームワークが無いと何が無いのか、逆によく分かる。',
+    title: 'Starting with Rack',
+    body: 'The call(env) I wrote in config.ru got called, and text showed up in the browser. Apparently that alone counts as a web application. Going without a framework makes it clear what a framework actually gives you.',
     created_at: '2026-08-02 10:00:00 +0900'
   },
   {
-    title: 'Router はただの配列だった',
-    body: 'resources :posts の中身が気になって自分で書いてみたら、7本のルートを配列に詰めているだけだった。/posts/new を /posts/:id より先に入れないと new が id 扱いされる、というのは踏んでから気づいた。',
+    title: 'The router was just an array',
+    body: 'I wondered what resources :posts does, so I wrote it myself. It just pushes seven routes into an array. I only learned the hard way that /posts/new has to come before /posts/:id, or new gets treated as an id.',
     created_at: '2026-08-04 10:00:00 +0900'
   },
   {
-    title: 'Layout の yield が分からなかった',
-    body: 'テンプレートの中の yield がどこから来るのか、しばらく分からなかった。テンプレートをメソッドにしてからブロック付きで呼ぶ、と知って腑に落ちた。この発想は自分では思いつかなかったと思う。',
+    title: "I didn't get yield in layouts",
+    body: "For a while I couldn't tell where the yield in a template comes from. It clicked once I learned that the template is turned into a method and called with a block. I don't think I would have come up with that myself.",
     created_at: '2026-08-05 10:00:00 +0900'
   },
   {
-    title: '「小さく作ってわかるRailsの仕組み」という話をします',
-    body: 'mini-rails の話をすることになりました。タイトルは「小さく作ってわかるRailsの仕組み」です。15分で、リクエストが Rack から Router、Controller、View を通って返るまでを、実際に書いたコードで追いかけます。',
+    title: "I'm giving a talk on how Rails works by building a small one",
+    body: "I'll be giving a talk about mini-rails. In 15 minutes, I'll follow a request from Rack through the router, controller and view and back, using the code I actually wrote.",
     created_at: '2026-08-06 10:00:00 +0900'
   }
 ].map { Post.create!(_1) }
 
 comments = {
   posts[1] => [
-    { body: 'call(env) だけで動くの、知ったときは驚きました。', created_at: '2026-08-03 09:00:00 +0900' }
+    { body: 'I was surprised too when I learned that call(env) is all it takes.', created_at: '2026-08-03 09:00:00 +0900' }
   ],
   posts[3] => [
-    { body: 'これ自分も引っかかりました。言われてみればという感じですね。', created_at: '2026-08-05 18:00:00 +0900' }
+    { body: 'I got caught by this too. Obvious once someone points it out.', created_at: '2026-08-05 18:00:00 +0900' }
   ],
   posts[4] => [
-    { body: '聞きに行きます！', created_at: '2026-08-07 09:00:00 +0900' },
-    { body: '資料は公開されますか？', created_at: '2026-08-07 14:00:00 +0900' },
-    { body: '15分でその範囲は攻めてますね…。楽しみにしています。', created_at: '2026-08-08 09:00:00 +0900' }
+    { body: "I'll be there!", created_at: '2026-08-07 09:00:00 +0900' },
+    { body: 'Will the slides be published?', created_at: '2026-08-07 14:00:00 +0900' },
+    { body: "That's a lot to cover in 15 minutes... Looking forward to it.", created_at: '2026-08-08 09:00:00 +0900' }
   ]
 }
 

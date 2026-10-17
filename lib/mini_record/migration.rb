@@ -7,7 +7,7 @@ module MiniRecord
       change
     end
 
-    # テンプレートメソッドパターン（説明しようか迷いどころ）
+    # Template method pattern (not sure yet whether to explain it)
     def change
       raise NotImplementedError, "#{self.class} must implement #change"
     end
@@ -17,7 +17,7 @@ module MiniRecord
         Base.connection.execute("DROP TABLE #{table_name};")
       else
         definition = TableDefinition.new(table_name)
-        yield definition # block の中で t.string :title などが呼ばれる
+        yield definition # t.string :title etc. are called inside the block
         Base.connection.execute(definition.to_sql)
       end
     end
@@ -84,7 +84,7 @@ module MiniRecord
     end
   end
 
-  # change_table のブロック内で t.string :name のように呼べるようにするラッパー
+  # Wrapper that allows calls like t.string :name inside a change_table block
   class ChangeTableProxy
     def initialize(migration, table_name)
       @migration = migration

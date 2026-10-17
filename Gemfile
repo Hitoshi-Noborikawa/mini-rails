@@ -6,3 +6,8 @@ gem 'rack-session'
 gem 'puma'
 gem 'sqlite3'
 gem 'dotenv'
+
+group :test do
+  gem 'minitest'
+  gem 'rack-test'
+end

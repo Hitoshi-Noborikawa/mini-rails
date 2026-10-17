@@ -3,6 +3,6 @@
 MiniRails.application.routes.draw do
   get '/', to: 'posts#index'
   resources :posts
-  # TODO: resources のネストは未対応なので、コメント作成だけ定義している
+  # TODO: Nested resources aren't supported yet, so only comment creation is defined
   post '/posts/:post_id/comments', to: 'comments#create'
 end

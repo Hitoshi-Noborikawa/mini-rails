@@ -33,6 +33,13 @@ bin/mini-seed
 bin/dev
 ```
 
+To run the tests (Minitest + Rack::Test, against an in-memory SQLite database):
+
+```bash
+bin/mini-test                                  # all tests
+bin/mini-test test/mini_record/relation_test.rb # a single file
+```
+
 ## License
 
 [MIT License](LICENSE)

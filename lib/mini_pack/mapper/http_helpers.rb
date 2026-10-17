@@ -13,14 +13,14 @@ module MiniPack
 
       private
 
-      # to: 'posts#index' を ['posts', 'index'] に分けて Route として積む
+      # Splits to: 'posts#index' into ['posts', 'index'] and adds a Route
       def add_route(method, pattern, to)
         controller, action = to.split('#')
         regex, param_names = compile_pattern(pattern)
         @routes << Route.new(method, pattern, regex, param_names, controller, action)
       end
 
-      # 例: '/posts/:id' → /\A\/posts\/(?<id>[^\/]+)\z/ と ['id']
+      # e.g. '/posts/:id' → /\A\/posts\/(?<id>[^\/]+)\z/ and ['id']
       def compile_pattern(pattern)
         param_names = []
         regex_source = pattern.gsub(/:(\w+)/) do
